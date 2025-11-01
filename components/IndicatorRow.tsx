@@ -81,42 +81,46 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
   ];
 
   return (
-    <div className="border border-neutral-2 bg-white shadow-sm">
-      <div className="grid grid-cols-[250px_8px_100px_8px_repeat(12,1fr)]">
-        {/* Coluna Indicador */}
-        <div className="flex items-center px-4 py-4 font-display font-bold text-sm">
-          {indicator.name}
+    <div className="flex gap-4">
+      {/* Bloco 1: Nome do Indicador */}
+      <div className="w-[250px]">
+        <div className="border border-neutral-2 bg-white shadow-sm">
+          <div className="flex items-center px-4 py-4 font-display font-bold text-sm">
+            {indicator.name}
+          </div>
         </div>
+      </div>
 
-        {/* Espaçador esquerdo */}
-        <div className="bg-neutral-2"></div>
-
-        {/* Coluna Acc */}
-        <div>
+      {/* Bloco 2: ACC */}
+      <div className="w-[100px]">
+        <div className="border border-neutral-2 bg-white shadow-sm">
           <MonthCell 
             data={indicator.accumulated} 
             unit={indicator.unit} 
             direction={indicator.direction}
           />
         </div>
+      </div>
 
-        {/* Espaçador direito */}
-        <div className="bg-neutral-2"></div>
-
-        {/* Colunas dos Meses */}
-        {months.map((month, index) => (
-          <div 
-            key={month.key}
-            className={index < months.length - 1 ? 'border-r border-neutral-2' : ''}
-          >
-            <MonthCell
-              data={indicator.months[month.key as keyof typeof indicator.months]}
-              unit={indicator.unit}
-              direction={indicator.direction}
-              showIcon={index === 0}
-            />
+      {/* Bloco 3: 12 Meses */}
+      <div className="flex-1">
+        <div className="border border-neutral-2 bg-white shadow-sm">
+          <div className="grid grid-cols-12">
+            {months.map((month, index) => (
+              <div 
+                key={month.key}
+                className={index < months.length - 1 ? 'border-r border-neutral-2' : ''}
+              >
+                <MonthCell
+                  data={indicator.months[month.key as keyof typeof indicator.months]}
+                  unit={indicator.unit}
+                  direction={indicator.direction}
+                  showIcon={index === 0}
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
