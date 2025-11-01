@@ -24,18 +24,21 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
   return (
     <div className="w-full">
       {/* Cabeçalho */}
-      <div className="grid grid-cols-[250px_100px_8px_repeat(12,1fr)] border border-neutral-2 bg-white">
+      <div className="grid grid-cols-[250px_8px_100px_8px_repeat(12,1fr)] border border-neutral-2 bg-white">
         {/* Coluna INDICADOR */}
         <div className="bg-suno-red text-white font-display font-bold text-sm px-4 py-3 flex items-center">
           INDICADOR
         </div>
+
+        {/* Espaçador esquerdo */}
+        <div className="bg-white"></div>
 
         {/* Coluna Acc */}
         <div className="bg-suno-red text-white font-display font-bold text-sm px-3 py-3 text-center flex items-center justify-center">
           Acc
         </div>
 
-        {/* Espaçador visual */}
+        {/* Espaçador direito */}
         <div className="bg-white"></div>
 
         {/* Colunas dos Meses */}

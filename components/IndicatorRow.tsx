@@ -82,14 +82,17 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
 
   return (
     <div className="border border-neutral-2 bg-white shadow-sm">
-      <div className="grid grid-cols-[250px_100px_8px_repeat(12,1fr)]">
+      <div className="grid grid-cols-[250px_8px_100px_8px_repeat(12,1fr)]">
         {/* Coluna Indicador */}
-        <div className="flex items-center px-4 py-4 font-display font-bold text-sm border-r border-neutral-2">
+        <div className="flex items-center px-4 py-4 font-display font-bold text-sm">
           {indicator.name}
         </div>
 
+        {/* Espaçador esquerdo */}
+        <div className="bg-neutral-2"></div>
+
         {/* Coluna Acc */}
-        <div className="border-r border-neutral-2">
+        <div>
           <MonthCell 
             data={indicator.accumulated} 
             unit={indicator.unit} 
@@ -97,7 +100,7 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
           />
         </div>
 
-        {/* Espaçador visual */}
+        {/* Espaçador direito */}
         <div className="bg-neutral-2"></div>
 
         {/* Colunas dos Meses */}
