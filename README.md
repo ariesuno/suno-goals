@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Suno Goals - Book de Indicadores
 
-## Getting Started
+Sistema interno da Suno para gestão e controle do Book de Indicadores de todos os colaboradores da empresa.
 
-First, run the development server:
+## 🎯 Objetivo
+
+Substituir o controle em Excel por uma interface web moderna, clean e otimizada para screenshots e apresentações em PPT. O layout foi projetado para caber integralmente na tela sem barras de rolagem, facilitando prints completos para reports.
+
+## 🎨 Design System
+
+O projeto segue fielmente a identidade visual da Suno:
+
+### Cores Principais
+- **Suno Gray**: `#4B4B4B`
+- **Suno Red**: `#D42126`
+
+### Cores Neutras
+- Neutral-2: `#DDDDDD`
+- Neutral-3: `#BBBBBB`
+- Neutral-5: `#999999`
+- Neutral-8: `#666666`
+- Neutral-10: `#212121`
+
+### Tipografia
+- **Inter**: Fonte principal para textos e dados (Regular 400, Semi Bold 600, Bold 700)
+- **Montserrat**: Fonte display para títulos e cabeçalhos (Regular 400, Medium 500, Bold 700)
+
+## 🚀 Tecnologias
+
+- **Next.js 15** (App Router)
+- **TypeScript**
+- **Tailwind CSS v4**
+- **Lucide React** (ícones)
+
+## 📦 Instalação
+
+```bash
+npm install
+```
+
+## 🏃 Executar
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🖨️ Print para Apresentações
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+O layout foi otimizado para screenshots:
 
-## Learn More
+1. Acesse a página no navegador
+2. Ajuste o zoom se necessário (recomendado: 100%)
+3. Tire um screenshot completo da tela
+4. Use diretamente em apresentações PPT
 
-To learn more about Next.js, take a look at the following resources:
+### Atalhos para Screenshot
+- **macOS**: `Cmd + Shift + 4` (área selecionada) ou `Cmd + Shift + 3` (tela inteira)
+- **Windows**: `Win + Shift + S` (Ferramenta de Captura)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📊 Estrutura de Indicadores
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Cada indicador possui:
 
-## Deploy on Vercel
+- **Nome**: Identificação do KPI
+- **Unidade**: `%`, `#`, `R$` ou `H$`
+- **Direção**: 
+  - `up` (↑): Maior é melhor
+  - `down` (↓): Menor é melhor
+- **Coluna Acc**: Acumulado do ano
+- **12 Colunas Mensais**: Janeiro a Dezembro
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Cores de Status
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Para indicadores `up` (maior é melhor):
+- 🟢 Verde: ≥ 100%
+- 🟡 Amarelo: 80% - 99%
+- 🔴 Vermelho: < 80%
+
+Para indicadores `down` (menor é melhor):
+- 🟢 Verde: ≤ 100%
+- 🟡 Amarelo: 101% - 110%
+- 🔴 Vermelho: > 110%
+
+## 📁 Estrutura do Projeto
+
+```
+suno-goals/
+├── app/
+│   ├── layout.tsx          # Layout principal com fontes
+│   ├── page.tsx             # Página inicial
+│   └── globals.css          # Estilos globais e tema
+├── components/
+│   ├── IndicatorTable.tsx   # Componente da tabela completa
+│   └── IndicatorRow.tsx     # Componente de linha de indicador
+├── lib/
+│   └── mockData.ts          # Dados de exemplo
+├── types/
+│   └── indicator.ts         # Tipos TypeScript
+├── public/
+│   └── images/              # Logos da Suno
+└── assets/                  # Assets originais
+```
+
+## 🔧 Próximos Passos (Backend)
+
+- [ ] Integração com API/Backend
+- [ ] Autenticação de usuários
+- [ ] CRUD de indicadores
+- [ ] Histórico de alterações
+- [ ] Exportação em PDF
+- [ ] Dashboard de análise
+
+## 📝 Licença
+
+Uso interno - Suno © 2025

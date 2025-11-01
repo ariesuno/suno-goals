@@ -1,26 +1,62 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Suno Brand Colors */
+  --color-suno-gray: #4b4b4b;
+  --color-suno-red: #d42126;
+  
+  /* Neutral Colors */
+  --color-neutral-2: #dddddd;
+  --color-neutral-3: #bbbbbb;
+  --color-neutral-5: #999999;
+  --color-neutral-8: #666666;
+  --color-neutral-10: #212121;
+  
+  /* Status Colors */
+  --color-status-green: #10b981;
+  --color-status-red: #ef4444;
+  --color-status-yellow: #f59e0b;
+  
+  /* Background & Foreground */
+  --color-background: #ffffff;
+  --color-foreground: #212121;
+  
+  /* Font Families */
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-montserrat), system-ui, -apple-system, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  @page {
+    margin: 0.5cm;
+    size: landscape;
+  }
+  
+  main {
+    padding: 0 !important;
+  }
+}
+
+/* Utility Classes */
+.font-display {
+  font-family: var(--font-display);
 }
