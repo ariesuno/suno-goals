@@ -30,11 +30,11 @@ export default function YearSelector({
     <div className="relative print:hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-neutral-3 rounded-lg hover:border-suno-red transition-colors font-display font-semibold text-neutral-10"
+        className="flex items-center gap-2 px-3 md:px-4 lg:px-5 py-2 md:py-2.5 lg:py-3 bg-white border-2 border-neutral-3 rounded-lg hover:border-suno-red transition-colors font-display font-semibold text-sm md:text-base lg:text-lg text-neutral-10"
         aria-label="Selecionar ano"
       >
         {selectedYear}
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (

@@ -74,12 +74,12 @@ export default function PrintButton() {
       ref={buttonRef}
       onClick={handleScreenshot}
       disabled={isCapturing}
-      className={`flex items-center gap-2 px-4 py-2 font-semibold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed print:hidden ${
+      className={`flex items-center gap-2 px-3 md:px-4 lg:px-5 py-2 md:py-2.5 lg:py-3 font-semibold text-sm md:text-base lg:text-lg rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed print:hidden ${
         copied ? 'bg-status-green text-white' : 'bg-suno-red text-white'
       }`}
       aria-label="Copiar tabela de indicadores como imagem"
     >
-      <Camera className="w-4 h-4" />
+      <Camera className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
       {copied ? '✓ Copiado!' : isCapturing ? 'Capturando...' : 'Screenshot'}
     </button>
   );
