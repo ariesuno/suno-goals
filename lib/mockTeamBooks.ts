@@ -9,6 +9,7 @@ export const mockTeamBooks: TeamBook[] = [
       type: 'person',
       role: 'Head de Dados e CRM',
     },
+    lastUpdate: new Date('2025-01-15'), // Atualizado recentemente
     data: {
       indicators: [
         {
@@ -100,6 +101,7 @@ export const mockTeamBooks: TeamBook[] = [
       type: 'team',
       teamName: 'Time de Dados',
     },
+    lastUpdate: new Date('2024-12-20'), // Desatualizado (mês anterior sem dados)
     data: {
       indicators: [
         {
@@ -165,6 +167,7 @@ export const mockTeamBooks: TeamBook[] = [
       type: 'team',
       teamName: 'Squad CRM',
     },
+    lastUpdate: new Date('2025-01-10'), // Atualizado recentemente
     data: {
       indicators: [
         {
@@ -256,6 +259,7 @@ export const mockTeamBooks: TeamBook[] = [
       type: 'person',
       role: 'Gerente de Produto',
     },
+    lastUpdate: new Date('2025-01-12'), // Atualizado recentemente
     data: {
       indicators: [
         {

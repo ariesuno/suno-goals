@@ -47,5 +47,23 @@ export type TeamBook = {
   id: string;
   owner: BookOwner;
   data: BookData;
+  lastUpdate?: Date; // Data da última atualização
+};
+
+export type NotificationType = 'missing_book' | 'outdated_book';
+
+export type Notification = {
+  id: string;
+  type: NotificationType;
+  message: string;
+  ownerName: string;
+  severity: 'warning' | 'error';
+};
+
+export type MacroIndicators = {
+  totalIndicators: number;
+  achieving: number; // Batendo meta
+  notAchieving: number; // Não batendo meta
+  achievementRate: number; // % de atingimento
 };
 

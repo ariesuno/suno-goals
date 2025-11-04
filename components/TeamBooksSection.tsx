@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { TeamBook } from '@/types/indicator';
 import BookHeader from './BookHeader';
 import BookNavigation from './BookNavigation';
 import IndicatorTable from './IndicatorTable';
 import ScreenshotButton from './ScreenshotButton';
+import TeamBooksSummary from './TeamBooksSummary';
+import { calculateMacroIndicators, generateNotifications } from '@/lib/teamBooksUtils';
 
 type TeamBooksSectionProps = {
   books: TeamBook[];
@@ -15,6 +17,10 @@ type TeamBooksSectionProps = {
 export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
+
+  // Calcula indicadores macro e notificações
+  const macroIndicators = useMemo(() => calculateMacroIndicators(books), [books]);
+  const notifications = useMemo(() => generateNotifications(books), [books]);
 
   if (books.length === 0) {
     return null;
@@ -44,42 +50,50 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
   return (
     <div className="mt-8 md:mt-10 lg:mt-12">
       {/* Container com borda unificada */}
-      <div className="border border-neutral-2 rounded-lg bg-white shadow-sm overflow-hidden">
-        {/* Botão para expandir/recolher */}
+      <div className="border border-neutral-2 rounded-xl bg-white shadow-sm overflow-hidden">
+        {/* Botão para expandir/recolher - REDESIGN */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between px-4 md:px-5 lg:px-6 py-3 md:py-4 bg-neutral-1 hover:bg-neutral-2 transition-colors"
+          className="w-full flex items-center justify-between px-4 md:px-5 py-2.5 md:py-3 bg-white hover:bg-neutral-1 transition-all duration-200"
           aria-expanded={isExpanded}
           aria-label={isExpanded ? 'Recolher books do time' : 'Expandir books do time'}
         >
-          <div className="flex items-center gap-3">
-            <h2 className="font-display font-bold text-base md:text-lg lg:text-xl text-neutral-10">
+          <div className="flex items-center gap-2.5">
+            <h2 className="font-display font-semibold text-sm md:text-base text-neutral-10">
               Books do Time
             </h2>
-            <span className="px-2 md:px-2.5 lg:px-3 py-0.5 md:py-1 bg-suno-red text-white text-xs md:text-sm font-bold rounded-full">
+            <span className="px-2 py-0.5 bg-suno-red text-white text-xs font-semibold rounded-md">
               {books.length}
             </span>
           </div>
           
           {isExpanded ? (
-            <ChevronUp className="w-5 h-5 md:w-6 md:h-6 text-neutral-8" />
+            <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-neutral-5 transition-transform" />
           ) : (
-            <ChevronDown className="w-5 h-5 md:w-6 md:h-6 text-neutral-8" />
+            <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-neutral-5 transition-transform" />
           )}
         </button>
 
         {/* Conteúdo expansível */}
         {isExpanded && (
           <div className="border-t border-neutral-2">
-            {/* Controles: Select + Navegação + Screenshot */}
-            <div className="bg-neutral-1 p-3 md:p-4">
-              <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3">
+            {/* Summary: Notificações + Indicadores Macro */}
+            <div className="bg-white px-4 md:px-5 py-3 md:py-3.5 border-b border-neutral-2">
+              <TeamBooksSummary 
+                notifications={notifications}
+                macroIndicators={macroIndicators}
+              />
+            </div>
+
+            {/* Controles: Select + Navegação + Screenshot - REDESIGN */}
+            <div className="bg-white px-4 md:px-5 py-3 md:py-3.5 border-b border-neutral-2">
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-2.5">
                 {/* Select de Books */}
-                <div className="lg:w-[320px] xl:w-[400px]">
+                <div className="lg:w-[280px] xl:w-[320px]">
                   <select
                     value={currentBook.id}
                     onChange={(e) => handleBookSelect(e.target.value)}
-                    className="w-full h-[40px] md:h-[44px] px-3 md:px-4 text-sm md:text-base border-2 border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red focus:border-suno-red bg-white cursor-pointer font-display font-semibold text-neutral-10 hover:border-suno-red transition-colors appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2724%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23666666%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:20px] bg-[right_12px_center] bg-no-repeat pr-10"
+                    className="w-full h-[36px] md:h-[38px] px-3 text-sm border border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red focus:border-suno-red bg-white cursor-pointer font-display font-medium text-neutral-10 hover:border-neutral-5 transition-colors appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2720%27 height=%2720%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%23999999%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:16px] bg-[right_10px_center] bg-no-repeat pr-9"
                     aria-label="Selecionar book"
                   >
                     {books.map((book) => (
@@ -93,7 +107,7 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
                 </div>
 
                 {/* Navegação e Screenshot */}
-                <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex items-center gap-2">
                   <BookNavigation
                     currentIndex={currentBookIndex}
                     totalBooks={books.length}
@@ -101,7 +115,7 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
                     onNext={handleNext}
                   />
                   
-                  <div className="h-8 md:h-10 w-px bg-neutral-3" />
+                  <div className="h-6 md:h-7 w-px bg-neutral-2" />
                   
                   <ScreenshotButton
                     targetSelector={`[data-team-book="${currentBook.id}"]`}
