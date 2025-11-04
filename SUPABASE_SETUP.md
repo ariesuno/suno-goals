@@ -65,42 +65,35 @@ ADMIN_EMAILS=seu-email@suno.com.br,outro-admin@suno.com.br
 
 ### 6. Criar Primeiro Usuário Admin
 
-#### Opção A: Via Supabase Dashboard
+⚠️ **IMPORTANTE**: Siga o guia detalhado em `supabase/create_first_admin.md`
 
-1. Vá em **Authentication** > **Users**
-2. Clique em "Add user"
-3. Preencha:
-   - **Email**: seu-email@suno.com.br (mesmo email do `.env.local`)
-   - **Password**: Escolha uma senha
-   - **Auto Confirm User**: ✅ Marque esta opção
-4. Clique em "Create user"
-5. Agora vá em **Table Editor** > **users**
-6. Clique em "Insert" > "Insert row"
-7. Preencha:
-   - **id**: Copie o UUID do usuário criado em Authentication
-   - **email**: seu-email@suno.com.br
-   - **full_name**: Seu Nome Completo
-   - **role**: `admin`
-   - **is_active**: `true`
-8. Clique em "Save"
+**Resumo rápido:**
 
-#### Opção B: Via SQL
+1. **Authentication** > **Users** > **Add user**
+   - Email: seu-email@suno.com.br
+   - Password: sua-senha
+   - ✅ Auto Confirm User
 
-Execute no SQL Editor:
+2. **Copie o UUID** do usuário criado
 
+3. **SQL Editor** > Execute:
 ```sql
--- 1. Primeiro, crie o usuário na autenticação (Authentication > Users)
--- 2. Depois, execute este SQL substituindo os valores:
-
 INSERT INTO public.users (id, email, full_name, role, is_active)
 VALUES (
-  'uuid-do-usuario-criado'::uuid,
+  'COLE-O-UUID-REAL-AQUI'::uuid,  -- ⚠️ Substitua pelo UUID copiado!
   'seu-email@suno.com.br',
   'Seu Nome Completo',
   'admin',
   true
 );
 ```
+
+4. Adicione o email em `.env.local`:
+```env
+ADMIN_EMAILS=seu-email@suno.com.br
+```
+
+📚 **Guia completo com troubleshooting**: `supabase/create_first_admin.md`
 
 ### 7. Testar a Aplicação
 
