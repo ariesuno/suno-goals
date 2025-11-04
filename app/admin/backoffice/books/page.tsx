@@ -6,6 +6,7 @@ import { mockBooks } from '@/lib/mockBooks';
 import { BackofficeBook, BookFilters } from '@/types/backoffice';
 import BookCard from '@/components/backoffice/BookCard';
 import BookDrawer from '@/components/backoffice/BookDrawer';
+import BookFormModal from '@/components/backoffice/BookFormModal';
 
 export default function BooksPage() {
   const [books, setBooks] = useState<BackofficeBook[]>(mockBooks);
@@ -13,6 +14,7 @@ export default function BooksPage() {
   const [filters, setFilters] = useState<BookFilters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [selectedBook, setSelectedBook] = useState<BackofficeBook | null>(null);
+  const [showFormModal, setShowFormModal] = useState(false);
 
   // Filtrar books
   const filteredBooks = books.filter(book => {
@@ -73,6 +75,12 @@ export default function BooksPage() {
     setSelectedBook(null);
   };
 
+  const handleSaveBook = (bookData: Partial<BackofficeBook>) => {
+    // TODO: Transform to full BackofficeBook and save
+    console.log('Saving book:', bookData);
+    setShowFormModal(false);
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -91,6 +99,7 @@ export default function BooksPage() {
           </p>
         </div>
         <button
+          onClick={() => setShowFormModal(true)}
           className="flex items-center gap-2 px-4 py-2.5 bg-suno-red text-white font-semibold text-sm rounded-lg hover:bg-red-700 transition-colors"
         >
           <Plus className="w-4 h-4" />
@@ -208,6 +217,14 @@ export default function BooksPage() {
           onClose={() => setSelectedBook(null)}
           onEdit={handleEditBook}
           onDelete={handleDeleteBook}
+        />
+      )}
+
+      {/* Modal de Formulário */}
+      {showFormModal && (
+        <BookFormModal
+          onSave={handleSaveBook}
+          onClose={() => setShowFormModal(false)}
         />
       )}
     </div>
