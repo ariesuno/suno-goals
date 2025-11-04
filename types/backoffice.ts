@@ -8,9 +8,12 @@ export type IndicatorFormat = 'percentage' | 'number' | 'currency' | 'boolean' |
 
 export type IndicatorAggregationType = 'none' | 'average' | 'sum' | 'count';
 
+export type IndicatorTagCategory = 'type' | 'business_unit' | 'support_area';
+
 export type IndicatorTag = {
   id: string;
   name: string;
+  category: IndicatorTagCategory;
   color: string;
 };
 

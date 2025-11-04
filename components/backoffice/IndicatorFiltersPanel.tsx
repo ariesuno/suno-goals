@@ -22,14 +22,33 @@ const formatOptions: { value: IndicatorFormat; label: string }[] = [
 ];
 
 const tagOptions = [
-  { id: '1', name: 'Operacional', color: '#666666' },
-  { id: '2', name: 'Vendas', color: '#d42126' },
-  { id: '3', name: 'Financeiro', color: '#d42126' },
-  { id: '4', name: 'Estratégico', color: '#4b4b4b' },
-  { id: '5', name: 'Qualidade', color: '#999999' },
-  { id: '6', name: 'Tech', color: '#666666' },
-  { id: '7', name: 'RH', color: '#666666' },
-  { id: '8', name: 'Projetos', color: '#4b4b4b' },
+  // TIPO
+  { id: '1', name: 'Estratégico', category: 'type' as const, color: '#d42126' },
+  { id: '2', name: 'Operacional', category: 'type' as const, color: '#666666' },
+  
+  // UNIDADES DE NEGÓCIO
+  { id: '10', name: 'Research', category: 'business_unit' as const, color: '#d42126' },
+  { id: '11', name: 'Advisory', category: 'business_unit' as const, color: '#d42126' },
+  { id: '12', name: 'Asset', category: 'business_unit' as const, color: '#d42126' },
+  { id: '13', name: 'Status Invest', category: 'business_unit' as const, color: '#d42126' },
+  { id: '14', name: 'Eleven', category: 'business_unit' as const, color: '#d42126' },
+  { id: '15', name: 'Marketing Makers', category: 'business_unit' as const, color: '#d42126' },
+  { id: '16', name: 'Mídias', category: 'business_unit' as const, color: '#d42126' },
+  
+  // ÁREAS DE SUPORTE
+  { id: '20', name: 'Tecnologia', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '21', name: 'Marketing', category: 'support_area' as const, color: '#666666' },
+  { id: '22', name: 'Produtos', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '23', name: 'Social', category: 'support_area' as const, color: '#666666' },
+  { id: '24', name: 'Vendas Ativas', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '25', name: 'Inbound', category: 'support_area' as const, color: '#666666' },
+  { id: '26', name: 'Financeiro', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '27', name: 'Compliance', category: 'support_area' as const, color: '#666666' },
+  { id: '28', name: 'Jurídico', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '29', name: 'C&D', category: 'support_area' as const, color: '#666666' },
+  { id: '30', name: 'Atendimento', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '31', name: 'Audio Visual', category: 'support_area' as const, color: '#666666' },
+  { id: '32', name: 'Planejamento', category: 'support_area' as const, color: '#4b4b4b' },
 ];
 
 export default function IndicatorFiltersPanel({ filters, onFiltersChange, onClose }: IndicatorFiltersPanelProps) {

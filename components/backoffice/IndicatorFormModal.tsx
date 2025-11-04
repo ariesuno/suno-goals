@@ -9,15 +9,40 @@ type IndicatorFormModalProps = {
 };
 
 const availableTags = [
-  { id: '1', name: 'Operacional', color: '#666666' },
-  { id: '2', name: 'Vendas', color: '#d42126' },
-  { id: '3', name: 'Financeiro', color: '#d42126' },
-  { id: '4', name: 'Estratégico', color: '#4b4b4b' },
-  { id: '5', name: 'Qualidade', color: '#999999' },
-  { id: '6', name: 'Tech', color: '#666666' },
-  { id: '7', name: 'RH', color: '#666666' },
-  { id: '8', name: 'Projetos', color: '#4b4b4b' },
+  // TIPO
+  { id: '1', name: 'Estratégico', category: 'type' as const, color: '#d42126' },
+  { id: '2', name: 'Operacional', category: 'type' as const, color: '#666666' },
+  
+  // UNIDADES DE NEGÓCIO
+  { id: '10', name: 'Research', category: 'business_unit' as const, color: '#d42126' },
+  { id: '11', name: 'Advisory', category: 'business_unit' as const, color: '#d42126' },
+  { id: '12', name: 'Asset', category: 'business_unit' as const, color: '#d42126' },
+  { id: '13', name: 'Status Invest', category: 'business_unit' as const, color: '#d42126' },
+  { id: '14', name: 'Eleven', category: 'business_unit' as const, color: '#d42126' },
+  { id: '15', name: 'Marketing Makers', category: 'business_unit' as const, color: '#d42126' },
+  { id: '16', name: 'Mídias', category: 'business_unit' as const, color: '#d42126' },
+  
+  // ÁREAS DE SUPORTE
+  { id: '20', name: 'Tecnologia', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '21', name: 'Marketing', category: 'support_area' as const, color: '#666666' },
+  { id: '22', name: 'Produtos', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '23', name: 'Social', category: 'support_area' as const, color: '#666666' },
+  { id: '24', name: 'Vendas Ativas', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '25', name: 'Inbound', category: 'support_area' as const, color: '#666666' },
+  { id: '26', name: 'Financeiro', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '27', name: 'Compliance', category: 'support_area' as const, color: '#666666' },
+  { id: '28', name: 'Jurídico', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '29', name: 'C&D', category: 'support_area' as const, color: '#666666' },
+  { id: '30', name: 'Atendimento', category: 'support_area' as const, color: '#4b4b4b' },
+  { id: '31', name: 'Audio Visual', category: 'support_area' as const, color: '#666666' },
+  { id: '32', name: 'Planejamento', category: 'support_area' as const, color: '#4b4b4b' },
 ];
+
+const categoryLabels = {
+  type: 'TIPO',
+  business_unit: 'UNIDADES DE NEGÓCIO',
+  support_area: 'ÁREAS DE SUPORTE',
+};
 
 export default function IndicatorFormModal({ indicator, onSave, onClose }: IndicatorFormModalProps) {
   const [formData, setFormData] = useState<Partial<BackofficeIndicator>>({
@@ -207,28 +232,90 @@ export default function IndicatorFormModal({ indicator, onSave, onClose }: Indic
 
             {/* Tags */}
             <div>
-              <label className="block text-sm font-medium text-neutral-10 mb-2">
+              <label className="block text-sm font-medium text-neutral-10 mb-3">
                 Tags
               </label>
-              <div className="flex flex-wrap gap-2">
-                {availableTags.map((tag) => {
-                  const isSelected = formData.tags?.some(t => t.id === tag.id);
-                  return (
-                    <button
-                      key={tag.id}
-                      type="button"
-                      onClick={() => toggleTag(tag.id)}
-                      className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-                        isSelected
-                          ? 'bg-neutral-10 text-white'
-                          : 'bg-neutral-1 text-neutral-8 hover:bg-neutral-2'
-                      }`}
-                      style={isSelected ? { borderLeft: `3px solid ${tag.color}` } : {}}
-                    >
-                      {tag.name}
-                    </button>
-                  );
-                })}
+              <div className="space-y-4">
+                {/* Tipo */}
+                <div>
+                  <p className="text-xs font-semibold text-neutral-5 mb-2 uppercase tracking-wide">
+                    {categoryLabels.type}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {availableTags.filter(t => t.category === 'type').map((tag) => {
+                      const isSelected = formData.tags?.some(t => t.id === tag.id);
+                      return (
+                        <button
+                          key={tag.id}
+                          type="button"
+                          onClick={() => toggleTag(tag.id)}
+                          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                            isSelected
+                              ? 'bg-neutral-10 text-white'
+                              : 'bg-neutral-1 text-neutral-8 hover:bg-neutral-2'
+                          }`}
+                          style={isSelected ? { borderLeft: `3px solid ${tag.color}` } : {}}
+                        >
+                          {tag.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Unidades de Negócio */}
+                <div>
+                  <p className="text-xs font-semibold text-neutral-5 mb-2 uppercase tracking-wide">
+                    {categoryLabels.business_unit}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {availableTags.filter(t => t.category === 'business_unit').map((tag) => {
+                      const isSelected = formData.tags?.some(t => t.id === tag.id);
+                      return (
+                        <button
+                          key={tag.id}
+                          type="button"
+                          onClick={() => toggleTag(tag.id)}
+                          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                            isSelected
+                              ? 'bg-neutral-10 text-white'
+                              : 'bg-neutral-1 text-neutral-8 hover:bg-neutral-2'
+                          }`}
+                          style={isSelected ? { borderLeft: `3px solid ${tag.color}` } : {}}
+                        >
+                          {tag.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Áreas de Suporte */}
+                <div>
+                  <p className="text-xs font-semibold text-neutral-5 mb-2 uppercase tracking-wide">
+                    {categoryLabels.support_area}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {availableTags.filter(t => t.category === 'support_area').map((tag) => {
+                      const isSelected = formData.tags?.some(t => t.id === tag.id);
+                      return (
+                        <button
+                          key={tag.id}
+                          type="button"
+                          onClick={() => toggleTag(tag.id)}
+                          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+                            isSelected
+                              ? 'bg-neutral-10 text-white'
+                              : 'bg-neutral-1 text-neutral-8 hover:bg-neutral-2'
+                          }`}
+                          style={isSelected ? { borderLeft: `3px solid ${tag.color}` } : {}}
+                        >
+                          {tag.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
 
