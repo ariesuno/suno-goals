@@ -16,20 +16,20 @@ export default function TeamBooksSummary({ notifications, macroIndicators }: Tea
     <div className="space-y-3">
       {/* Notificações */}
       {hasWarnings && (
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-orange-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-suno-red flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <h3 className="text-xs font-semibold text-orange-900 mb-1.5">
+              <h3 className="text-xs font-semibold text-neutral-10 mb-1.5">
                 Atenção necessária
               </h3>
               <div className="space-y-1">
                 {notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className="text-xs text-orange-800 flex items-start gap-1.5"
+                    className="text-xs text-neutral-8 flex items-start gap-1.5"
                   >
-                    <span className="text-orange-600">•</span>
+                    <span className="text-suno-red">•</span>
                     <span>
                       <strong>{notification.ownerName}</strong>: {notification.message}
                     </span>
@@ -55,12 +55,12 @@ export default function TeamBooksSummary({ notifications, macroIndicators }: Tea
         </div>
 
         {/* Batendo Meta */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-2.5">
+        <div className="bg-white border border-neutral-2 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
-            <TrendingUp className="w-3.5 h-3.5 text-green-600" />
-            <span className="text-xs text-green-700 font-medium">Batendo</span>
+            <TrendingUp className="w-3.5 h-3.5 text-neutral-5" />
+            <span className="text-xs text-neutral-5 font-medium">Batendo</span>
           </div>
-          <div className="text-lg font-bold text-green-700">
+          <div className="text-lg font-bold text-neutral-10">
             {macroIndicators.achieving}
           </div>
         </div>
@@ -68,10 +68,10 @@ export default function TeamBooksSummary({ notifications, macroIndicators }: Tea
         {/* Não Batendo Meta */}
         <div className="bg-red-50 border border-red-200 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
-            <TrendingDown className="w-3.5 h-3.5 text-red-600" />
-            <span className="text-xs text-red-700 font-medium">Abaixo</span>
+            <TrendingDown className="w-3.5 h-3.5 text-suno-red" />
+            <span className="text-xs text-suno-red font-medium">Abaixo</span>
           </div>
-          <div className="text-lg font-bold text-red-700">
+          <div className="text-lg font-bold text-suno-red">
             {macroIndicators.notAchieving}
           </div>
         </div>
@@ -85,10 +85,8 @@ export default function TeamBooksSummary({ notifications, macroIndicators }: Tea
           </span>
           <span className={`text-sm font-bold ${
             achievementPercentage >= 80 
-              ? 'text-green-600' 
-              : achievementPercentage >= 60 
-              ? 'text-orange-600' 
-              : 'text-red-600'
+              ? 'text-neutral-10' 
+              : 'text-suno-red'
           }`}>
             {achievementPercentage}%
           </span>
@@ -97,10 +95,8 @@ export default function TeamBooksSummary({ notifications, macroIndicators }: Tea
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               achievementPercentage >= 80 
-                ? 'bg-green-500' 
-                : achievementPercentage >= 60 
-                ? 'bg-orange-500' 
-                : 'bg-red-500'
+                ? 'bg-neutral-8' 
+                : 'bg-suno-red'
             }`}
             style={{ width: `${achievementPercentage}%` }}
           />

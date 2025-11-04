@@ -41,8 +41,8 @@ export default async function BackofficeDashboard() {
         {/* Total Users */}
         <div className="bg-white border border-neutral-2 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-neutral-2 rounded-lg flex items-center justify-center">
+              <Users className="w-5 h-5 text-neutral-8" />
             </div>
             <span className="text-xs font-medium text-neutral-5">Total</span>
           </div>
@@ -55,8 +55,8 @@ export default async function BackofficeDashboard() {
         {/* Total Indicators */}
         <div className="bg-white border border-neutral-2 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
+            <div className="w-10 h-10 bg-neutral-2 rounded-lg flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-neutral-8" />
             </div>
             <span className="text-xs font-medium text-neutral-5">Total</span>
           </div>
@@ -69,8 +69,8 @@ export default async function BackofficeDashboard() {
         {/* Total Books */}
         <div className="bg-white border border-neutral-2 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-green-600" />
+            <div className="w-10 h-10 bg-neutral-2 rounded-lg flex items-center justify-center">
+              <BookOpen className="w-5 h-5 text-neutral-8" />
             </div>
             <span className="text-xs font-medium text-neutral-5">Total</span>
           </div>
@@ -83,14 +83,14 @@ export default async function BackofficeDashboard() {
         {/* Achieving Indicators */}
         <div className="bg-white border border-neutral-2 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="w-10 h-10 bg-neutral-2 rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-5 h-5 text-neutral-8" />
             </div>
-            <span className="text-xs font-medium text-green-600">
+            <span className="text-xs font-medium text-neutral-8">
               {Math.round((stats.achievingIndicators / stats.totalIndicators) * 100)}%
             </span>
           </div>
-          <div className="text-2xl font-bold text-green-600 mb-1">
+          <div className="text-2xl font-bold text-neutral-10 mb-1">
             {stats.achievingIndicators}
           </div>
           <div className="text-sm text-neutral-8">Batendo Meta</div>
@@ -99,14 +99,14 @@ export default async function BackofficeDashboard() {
         {/* Not Achieving Indicators */}
         <div className="bg-white border border-neutral-2 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <XCircle className="w-5 h-5 text-red-600" />
+            <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+              <XCircle className="w-5 h-5 text-suno-red" />
             </div>
-            <span className="text-xs font-medium text-red-600">
+            <span className="text-xs font-medium text-suno-red">
               {Math.round((stats.notAchievingIndicators / stats.totalIndicators) * 100)}%
             </span>
           </div>
-          <div className="text-2xl font-bold text-red-600 mb-1">
+          <div className="text-2xl font-bold text-suno-red mb-1">
             {stats.notAchievingIndicators}
           </div>
           <div className="text-sm text-neutral-8">Abaixo da Meta</div>
@@ -115,12 +115,12 @@ export default async function BackofficeDashboard() {
         {/* Outdated Books */}
         <div className="bg-white border border-neutral-2 rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-              <AlertCircle className="w-5 h-5 text-orange-600" />
+            <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+              <AlertCircle className="w-5 h-5 text-suno-red" />
             </div>
-            <span className="text-xs font-medium text-orange-600">Atenção</span>
+            <span className="text-xs font-medium text-suno-red">Atenção</span>
           </div>
-          <div className="text-2xl font-bold text-orange-600 mb-1">
+          <div className="text-2xl font-bold text-suno-red mb-1">
             {stats.outdatedBooks}
           </div>
           <div className="text-sm text-neutral-8">Books Desatualizados</div>
