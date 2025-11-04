@@ -20,8 +20,8 @@ const getStatusColor = (percentage: number, direction: 'up' | 'down'): string =>
 };
 
 const formatValue = (value: number, unit: string): string => {
-  if (value === 0) return '';
-  
+  if (value === 0) return '\u00A0'; // Non-breaking space para manter altura
+
   if (unit === 'R$' || unit === 'H$') {
     return value.toLocaleString('pt-BR');
   }
@@ -29,7 +29,7 @@ const formatValue = (value: number, unit: string): string => {
 };
 
 const formatPercentage = (percentage: number): string => {
-  if (percentage === 0) return '';
+  if (percentage === 0) return '\u00A0'; // Non-breaking space para manter altura
   return `${percentage}%`;
 };
 
@@ -52,19 +52,19 @@ const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = f
   return (
     <div className={`flex flex-col h-full ${borderRightClass}`}>
       {/* Linha 1: Meta */}
-      <div className="px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[10px] md:text-xs lg:text-sm text-neutral-5 border-b border-neutral-2 min-h-[22px] md:min-h-[24px] lg:min-h-[26px] flex items-center justify-center bg-white">
+      <div className="px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[10px] md:text-xs lg:text-sm text-neutral-5 border-b border-neutral-2 h-[22px] md:h-[24px] lg:h-[26px] flex items-center justify-center bg-white">
         {formatValue(data.meta, unit)}
       </div>
       
       {/* Linha 2: Real */}
-      <div className={`px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[11px] md:text-sm lg:text-base font-semibold border-b border-neutral-2 min-h-[24px] md:min-h-[26px] lg:min-h-[30px] flex items-center justify-center bg-white ${
+      <div className={`px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[11px] md:text-sm lg:text-base font-semibold border-b border-neutral-2 h-[24px] md:h-[26px] lg:h-[30px] flex items-center justify-center bg-white ${
         hasData ? 'text-neutral-10' : 'text-neutral-3'
       }`}>
         {formatValue(data.real, unit)}
       </div>
       
       {/* Linha 3: Percentual - SEM borda bottom para evitar faixa */}
-      <div className={`px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[11px] md:text-sm lg:text-base font-bold min-h-[24px] md:min-h-[26px] lg:min-h-[30px] flex items-center justify-center gap-0.5 ${
+      <div className={`px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[11px] md:text-sm lg:text-base font-bold h-[24px] md:h-[26px] lg:h-[30px] flex items-center justify-center gap-0.5 ${
         hasData 
           ? `${statusColor} text-white` 
           : 'bg-neutral-1 text-neutral-5'
