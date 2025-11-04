@@ -5,7 +5,7 @@ import { mockBookData } from '@/lib/mockData';
 export default function Home() {
   return (
     <main className="min-h-screen bg-white p-8">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="w-[90%] mx-auto">
         {/* Header */}
         <Header 
           title="Book de Indicadores"

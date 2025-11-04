@@ -9,13 +9,12 @@ const getStatusColor = (percentage: number, direction: 'up' | 'down'): string =>
   if (percentage === 0) return 'bg-white';
   
   if (direction === 'up') {
+    // Maior é melhor: >= 100% = verde, < 100% = vermelho
     if (percentage >= 100) return 'bg-status-green';
-    if (percentage >= 80) return 'bg-status-yellow';
     return 'bg-status-red';
   } else {
-    // Para indicadores "down" (menor é melhor)
+    // Menor é melhor: <= 100% = verde, > 100% = vermelho
     if (percentage <= 100) return 'bg-status-green';
-    if (percentage <= 110) return 'bg-status-yellow';
     return 'bg-status-red';
   }
 };
@@ -84,8 +83,8 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
     <div className="flex gap-4">
       {/* Bloco 1: Nome do Indicador */}
       <div className="w-[250px]">
-        <div className="border border-neutral-2 bg-white shadow-sm">
-          <div className="flex items-center px-4 py-4 font-display font-bold text-sm">
+        <div className="border border-neutral-2 bg-white shadow-sm h-full">
+          <div className="flex items-center justify-center px-4 font-display font-bold text-sm h-full min-h-[96px]">
             {indicator.name}
           </div>
         </div>
