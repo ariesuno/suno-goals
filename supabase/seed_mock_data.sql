@@ -5,29 +5,86 @@
 -- Execute após rodar os scripts de schema e indicators_module
 
 -- =====================================================================================================================
--- 1. USUÁRIOS MOCK
+-- 0. CRIAR USUÁRIOS NO AUTH.USERS (Supabase Auth)
+-- =====================================================================================================================
+-- IMPORTANTE: Primeiro criamos os usuários na tabela auth.users do Supabase
+-- Senha padrão para todos: "Suno@2025" (você pode mudar depois)
+
+INSERT INTO auth.users (
+  id,
+  instance_id,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  created_at,
+  updated_at,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  is_super_admin,
+  role,
+  aud
+) VALUES
+  -- Admins
+  ('11111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'admin@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Admin FP&A"}', false, 'authenticated', 'authenticated'),
+  ('22222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'ana.silva@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Ana Silva"}', false, 'authenticated', 'authenticated'),
+  -- Managers
+  ('33333333-3333-3333-3333-333333333333', '00000000-0000-0000-0000-000000000000', 'allan.silva@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Allan Silva"}', false, 'authenticated', 'authenticated'),
+  ('44444444-4444-4444-4444-444444444444', '00000000-0000-0000-0000-000000000000', 'maria.santos@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Maria Santos"}', false, 'authenticated', 'authenticated'),
+  ('55555555-5555-5555-5555-555555555555', '00000000-0000-0000-0000-000000000000', 'pedro.costa@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Pedro Costa"}', false, 'authenticated', 'authenticated'),
+  ('66666666-6666-6666-6666-666666666666', '00000000-0000-0000-0000-000000000000', 'julia.oliveira@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Julia Oliveira"}', false, 'authenticated', 'authenticated'),
+  -- Employees
+  ('77777777-7777-7777-7777-777777777777', '00000000-0000-0000-0000-000000000000', 'carlos.mendes@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Carlos Mendes"}', false, 'authenticated', 'authenticated'),
+  ('88888888-8888-8888-8888-888888888888', '00000000-0000-0000-0000-000000000000', 'fernanda.lima@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Fernanda Lima"}', false, 'authenticated', 'authenticated'),
+  ('99999999-9999-9999-9999-999999999999', '00000000-0000-0000-0000-000000000000', 'roberto.alves@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Roberto Alves"}', false, 'authenticated', 'authenticated'),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '00000000-0000-0000-0000-000000000000', 'patricia.rocha@suno.com.br', crypt('Suno@2025', gen_salt('bf')), NOW(), NOW(), NOW(), '{"provider":"email","providers":["email"]}', '{"full_name":"Patricia Rocha"}', false, 'authenticated', 'authenticated')
+ON CONFLICT (id) DO NOTHING;
+
+-- Criar identities para os usuários
+INSERT INTO auth.identities (
+  id,
+  user_id,
+  identity_data,
+  provider,
+  last_sign_in_at,
+  created_at,
+  updated_at
+) VALUES
+  ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '{"sub":"11111111-1111-1111-1111-111111111111","email":"admin@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '{"sub":"22222222-2222-2222-2222-222222222222","email":"ana.silva@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', '{"sub":"33333333-3333-3333-3333-333333333333","email":"allan.silva@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', '{"sub":"44444444-4444-4444-4444-444444444444","email":"maria.santos@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('55555555-5555-5555-5555-555555555555', '55555555-5555-5555-5555-555555555555', '{"sub":"55555555-5555-5555-5555-555555555555","email":"pedro.costa@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('66666666-6666-6666-6666-666666666666', '66666666-6666-6666-6666-666666666666', '{"sub":"66666666-6666-6666-6666-666666666666","email":"julia.oliveira@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('77777777-7777-7777-7777-777777777777', '77777777-7777-7777-7777-777777777777', '{"sub":"77777777-7777-7777-7777-777777777777","email":"carlos.mendes@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('88888888-8888-8888-8888-888888888888', '88888888-8888-8888-8888-888888888888', '{"sub":"88888888-8888-8888-8888-888888888888","email":"fernanda.lima@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('99999999-9999-9999-9999-999999999999', '99999999-9999-9999-9999-999999999999', '{"sub":"99999999-9999-9999-9999-999999999999","email":"roberto.alves@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","email":"patricia.rocha@suno.com.br"}', 'email', NOW(), NOW(), NOW())
+ON CONFLICT (id) DO NOTHING;
+
+-- =====================================================================================================================
+-- 1. USUÁRIOS NA TABELA PUBLIC.USERS
 -- =====================================================================================================================
 
 -- Admins FP&A
-INSERT INTO public.users (id, email, name, role, created_at) VALUES
-  ('11111111-1111-1111-1111-111111111111', 'admin@suno.com.br', 'Admin FP&A', 'admin', NOW()),
-  ('22222222-2222-2222-2222-222222222222', 'ana.silva@suno.com.br', 'Ana Silva', 'admin', NOW())
+INSERT INTO public.users (id, email, full_name, role, department, created_at) VALUES
+  ('11111111-1111-1111-1111-111111111111', 'admin@suno.com.br', 'Admin FP&A', 'admin', 'FP&A', NOW()),
+  ('22222222-2222-2222-2222-222222222222', 'ana.silva@suno.com.br', 'Ana Silva', 'admin', 'FP&A', NOW())
 ON CONFLICT (id) DO NOTHING;
 
 -- Managers
-INSERT INTO public.users (id, email, name, role, created_at) VALUES
-  ('33333333-3333-3333-3333-333333333333', 'allan.silva@suno.com.br', 'Allan Silva', 'manager', NOW()),
-  ('44444444-4444-4444-4444-444444444444', 'maria.santos@suno.com.br', 'Maria Santos', 'manager', NOW()),
-  ('55555555-5555-5555-5555-555555555555', 'pedro.costa@suno.com.br', 'Pedro Costa', 'manager', NOW()),
-  ('66666666-6666-6666-6666-666666666666', 'julia.oliveira@suno.com.br', 'Julia Oliveira', 'manager', NOW())
+INSERT INTO public.users (id, email, full_name, role, department, created_at) VALUES
+  ('33333333-3333-3333-3333-333333333333', 'allan.silva@suno.com.br', 'Allan Silva', 'manager', 'Dados e CRM', NOW()),
+  ('44444444-4444-4444-4444-444444444444', 'maria.santos@suno.com.br', 'Maria Santos', 'manager', 'Produtos', NOW()),
+  ('55555555-5555-5555-5555-555555555555', 'pedro.costa@suno.com.br', 'Pedro Costa', 'manager', 'Comercial', NOW()),
+  ('66666666-6666-6666-6666-666666666666', 'julia.oliveira@suno.com.br', 'Julia Oliveira', 'manager', 'Compliance', NOW())
 ON CONFLICT (id) DO NOTHING;
 
--- Usuários regulares
-INSERT INTO public.users (id, email, name, role, created_at) VALUES
-  ('77777777-7777-7777-7777-777777777777', 'carlos.mendes@suno.com.br', 'Carlos Mendes', 'user', NOW()),
-  ('88888888-8888-8888-8888-888888888888', 'fernanda.lima@suno.com.br', 'Fernanda Lima', 'user', NOW()),
-  ('99999999-9999-9999-9999-999999999999', 'roberto.alves@suno.com.br', 'Roberto Alves', 'user', NOW()),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'patricia.rocha@suno.com.br', 'Patricia Rocha', 'user', NOW())
+-- Usuários regulares (employees)
+INSERT INTO public.users (id, email, full_name, role, department, manager_id, created_at) VALUES
+  ('77777777-7777-7777-7777-777777777777', 'carlos.mendes@suno.com.br', 'Carlos Mendes', 'employee', 'Dados e CRM', '33333333-3333-3333-3333-333333333333', NOW()),
+  ('88888888-8888-8888-8888-888888888888', 'fernanda.lima@suno.com.br', 'Fernanda Lima', 'employee', 'Atendimento', '55555555-5555-5555-5555-555555555555', NOW()),
+  ('99999999-9999-9999-9999-999999999999', 'roberto.alves@suno.com.br', 'Roberto Alves', 'employee', 'Produtos', '44444444-4444-4444-4444-444444444444', NOW()),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'patricia.rocha@suno.com.br', 'Patricia Rocha', 'employee', 'Compliance', '66666666-6666-6666-6666-666666666666', NOW())
 ON CONFLICT (id) DO NOTHING;
 
 -- =====================================================================================================================
