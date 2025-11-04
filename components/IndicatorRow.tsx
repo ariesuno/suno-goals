@@ -40,19 +40,24 @@ type CellProps = {
   showIcon?: boolean;
 };
 
-const MonthCell = ({ data, unit, direction, showIcon = false }: CellProps) => {
+type MonthCellProps = CellProps & {
+  hasRightBorder?: boolean;
+};
+
+const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = false }: MonthCellProps) => {
   const statusColor = getStatusColor(data.percentage, direction);
   const hasData = data.real !== 0 || data.percentage !== 0;
+  const borderRightClass = hasRightBorder ? 'border-r border-neutral-2' : '';
   
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col h-full ${borderRightClass}`}>
       {/* Linha 1: Meta */}
-      <div className="px-2 py-1.5 text-center text-xs text-neutral-5 border-b border-neutral-2 min-h-[28px] flex items-center justify-center">
+      <div className={`px-2 py-1.5 text-center text-xs text-neutral-5 border-b border-neutral-2 min-h-[28px] flex items-center justify-center bg-white`}>
         {formatValue(data.meta, unit)}
       </div>
       
       {/* Linha 2: Real */}
-      <div className={`px-2 py-1.5 text-center text-sm font-semibold border-b border-neutral-2 min-h-[32px] flex items-center justify-center ${
+      <div className={`px-2 py-1.5 text-center text-sm font-semibold border-b border-neutral-2 min-h-[32px] flex items-center justify-center bg-white ${
         hasData ? 'text-neutral-10' : 'text-neutral-3'
       }`}>
         {formatValue(data.real, unit)}
@@ -118,17 +123,14 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
         <div className="border border-neutral-2 bg-white shadow-sm">
           <div className="grid grid-cols-12">
             {months.map((month, index) => (
-              <div 
+              <MonthCell
                 key={month.key}
-                className={index < months.length - 1 ? 'border-r border-neutral-2' : ''}
-              >
-                <MonthCell
-                  data={indicator.months[month.key as keyof typeof indicator.months]}
-                  unit={indicator.unit}
-                  direction={indicator.direction}
-                  showIcon={index === 0}
-                />
-              </div>
+                data={indicator.months[month.key as keyof typeof indicator.months]}
+                unit={indicator.unit}
+                direction={indicator.direction}
+                showIcon={index === 0}
+                hasRightBorder={index < months.length - 1}
+              />
             ))}
           </div>
         </div>
