@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { TeamBook } from '@/types/indicator';
 import BookHeader from './BookHeader';
 import BookNavigation from './BookNavigation';
-import BookSearchAndSelect from './BookSearchAndSelect';
 import IndicatorTable from './IndicatorTable';
 import ScreenshotButton from './ScreenshotButton';
 
@@ -69,28 +68,46 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
 
       {/* Conteúdo expansível */}
       {isExpanded && (
-        <div className="mt-4 sm:mt-5 md:mt-6 lg:mt-7 space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7">
-          {/* Busca e Seleção */}
-          <BookSearchAndSelect
-            books={books}
-            currentBookId={currentBook.id}
-            onBookSelect={handleBookSelect}
-          />
+        <div className="mt-4 sm:mt-5 md:mt-6 lg:mt-7">
+          {/* Controles: Select + Navegação + Screenshot */}
+          <div className="bg-neutral-1 border border-neutral-2 rounded-lg p-3 md:p-4 mb-4 md:mb-5 lg:mb-6">
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 md:gap-4">
+              {/* Select de Books */}
+              <div className="flex-1">
+                <select
+                  value={currentBook.id}
+                  onChange={(e) => handleBookSelect(e.target.value)}
+                  className="w-full px-3 md:px-4 py-2 md:py-2.5 text-sm md:text-base border-2 border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red focus:border-suno-red bg-white cursor-pointer font-display font-semibold text-neutral-10 hover:border-suno-red transition-colors"
+                  aria-label="Selecionar book"
+                >
+                  {books.map((book) => (
+                    <option key={book.id} value={book.id}>
+                      {book.owner.name}
+                      {book.owner.role && ` • ${book.owner.role}`}
+                      {book.owner.teamName && !book.owner.role && ` • ${book.owner.teamName}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          {/* Navegação e Screenshot */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-            <BookNavigation
-              currentIndex={currentBookIndex}
-              totalBooks={books.length}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-            />
-            
-            <ScreenshotButton
-              targetSelector={`[data-team-book="${currentBook.id}"]`}
-              fileName={`book-${currentBook.owner.name.toLowerCase().replace(/\s+/g, '-')}.png`}
-              label="Screenshot"
-            />
+              {/* Navegação */}
+              <div className="flex items-center gap-2 md:gap-3">
+                <BookNavigation
+                  currentIndex={currentBookIndex}
+                  totalBooks={books.length}
+                  onPrevious={handlePrevious}
+                  onNext={handleNext}
+                />
+                
+                <div className="h-8 md:h-10 w-px bg-neutral-3" />
+                
+                <ScreenshotButton
+                  targetSelector={`[data-team-book="${currentBook.id}"]`}
+                  fileName={`book-${currentBook.owner.name.toLowerCase().replace(/\s+/g, '-')}.png`}
+                  label="Screenshot"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Book atual */}

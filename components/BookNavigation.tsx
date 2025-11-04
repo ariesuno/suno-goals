@@ -17,32 +17,26 @@ export default function BookNavigation({
   const hasNext = currentIndex < totalBooks - 1;
   
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex items-center gap-2">
       {/* Botão Anterior */}
       <button
         onClick={onPrevious}
         disabled={!hasPrevious}
-        className={`flex items-center gap-2 px-3 md:px-4 lg:px-5 py-2 md:py-2.5 lg:py-3 rounded-lg font-semibold text-sm md:text-base lg:text-lg transition-all ${
+        className={`p-2 md:p-2.5 rounded-lg transition-all border-2 ${
           hasPrevious
-            ? 'bg-neutral-1 text-neutral-10 hover:bg-neutral-2 cursor-pointer'
-            : 'bg-neutral-1 text-neutral-3 cursor-not-allowed opacity-50'
+            ? 'bg-white border-neutral-3 text-neutral-10 hover:border-suno-red cursor-pointer'
+            : 'bg-neutral-1 border-neutral-2 text-neutral-3 cursor-not-allowed'
         }`}
         aria-label="Book anterior"
+        title="Anterior"
       >
-        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
-        <span className="hidden md:inline">Anterior</span>
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
       </button>
       
       {/* Indicador de Posição */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm md:text-base lg:text-lg font-semibold text-neutral-10">
-          {currentIndex + 1}
-        </span>
-        <span className="text-sm md:text-base lg:text-lg text-neutral-5">
-          de
-        </span>
-        <span className="text-sm md:text-base lg:text-lg font-semibold text-neutral-10">
-          {totalBooks}
+      <div className="px-3 md:px-4 py-2 md:py-2.5 bg-white border-2 border-neutral-3 rounded-lg">
+        <span className="text-sm md:text-base font-display font-semibold text-neutral-10">
+          {currentIndex + 1} / {totalBooks}
         </span>
       </div>
       
@@ -50,15 +44,15 @@ export default function BookNavigation({
       <button
         onClick={onNext}
         disabled={!hasNext}
-        className={`flex items-center gap-2 px-3 md:px-4 lg:px-5 py-2 md:py-2.5 lg:py-3 rounded-lg font-semibold text-sm md:text-base lg:text-lg transition-all ${
+        className={`p-2 md:p-2.5 rounded-lg transition-all border-2 ${
           hasNext
-            ? 'bg-neutral-1 text-neutral-10 hover:bg-neutral-2 cursor-pointer'
-            : 'bg-neutral-1 text-neutral-3 cursor-not-allowed opacity-50'
+            ? 'bg-white border-neutral-3 text-neutral-10 hover:border-suno-red cursor-pointer'
+            : 'bg-neutral-1 border-neutral-2 text-neutral-3 cursor-not-allowed'
         }`}
         aria-label="Próximo book"
+        title="Próximo"
       >
-        <span className="hidden md:inline">Próximo</span>
-        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6" />
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
       </button>
     </div>
   );
