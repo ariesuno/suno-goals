@@ -88,38 +88,97 @@ export type BackofficeIndicator = {
 // BOOKS - TIPOS
 // =====================================================
 
-export type BookIndicatorConfig = {
+export type BookOwnerType = 'person' | 'team';
+
+export type BookOwner = {
+  id: string;
+  name: string;
+  type: BookOwnerType;
+  email?: string;
+  role?: string;
+  team_members_count?: number;
+};
+
+export type MonthlyGoals = {
+  jan?: number;
+  feb?: number;
+  mar?: number;
+  apr?: number;
+  may?: number;
+  jun?: number;
+  jul?: number;
+  aug?: number;
+  sep?: number;
+  oct?: number;
+  nov?: number;
+  dec?: number;
+};
+
+export type BookIndicatorWithGoals = {
+  id: string;
   indicator_id: string;
-  is_manager: boolean; // Se o usuário pode editar ou só visualizar
+  indicator_name: string;
+  indicator_format: IndicatorFormat;
+  indicator_direction: 'up' | 'down';
+  indicator_tags: IndicatorTag[];
   display_order: number;
-  custom_goal?: {
-    jan: number;
-    feb: number;
-    mar: number;
-    apr: number;
-    may: number;
-    jun: number;
-    jul: number;
-    aug: number;
-    sep: number;
-    oct: number;
-    nov: number;
-    dec: number;
+  goals: MonthlyGoals;
+  has_missing_goals: boolean; // Se tem algum mês sem meta
+  missing_goals_count: number;
+  current_performance?: number; // % de atingimento acumulado
+  is_achieving?: boolean; // Se está batendo meta
+};
+
+export type BookQuarterHistory = {
+  quarter: number; // 1, 2, 3, 4
+  year: number;
+  indicators: string[]; // IDs dos indicadores
+  changes?: {
+    added?: string[];
+    removed?: string[];
   };
+  changed_by?: string;
+  changed_at: Date;
 };
 
 export type BackofficeBook = {
   id: string;
-  owner_id: string;
-  owner_name: string;
-  owner_email: string;
   name: string;
-  description?: string;
   year: number;
-  indicators: BookIndicatorConfig[];
+  owner: BookOwner;
+  description?: string;
+  indicators: BookIndicatorWithGoals[];
   is_active: boolean;
+  
+  // Métricas calculadas
+  total_indicators: number;
+  indicators_with_missing_goals: number;
+  overall_performance?: number; // % médio de atingimento
+  indicators_achieving?: number; // Quantos estão batendo meta
+  performance_level?: 'excellent' | 'good' | 'regular' | 'critical'; // >95, 80-95, 70-80, <70
+  
+  // Quarters
+  active_quarters: number[]; // [1, 2, 3, 4]
+  current_quarter?: number;
+  
+  // Histórico
+  history?: BookQuarterHistory[];
+  
+  // Metadata
+  created_by: string;
+  created_by_name: string;
   created_at: Date;
   updated_at: Date;
+};
+
+export type BookFilters = {
+  search?: string;
+  year?: number;
+  owner_type?: BookOwnerType[];
+  is_active?: boolean;
+  has_missing_goals?: boolean;
+  performance_level?: ('excellent' | 'good' | 'regular' | 'critical')[];
+  business_unit?: string[]; // Tags de unidade de negócio
 };
 
 // =====================================================
