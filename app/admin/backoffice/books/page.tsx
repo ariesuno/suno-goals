@@ -5,12 +5,14 @@ import { Plus, Search, Filter, X } from 'lucide-react';
 import { mockBooks } from '@/lib/mockBooks';
 import { BackofficeBook, BookFilters } from '@/types/backoffice';
 import BookCard from '@/components/backoffice/BookCard';
+import BookDrawer from '@/components/backoffice/BookDrawer';
 
 export default function BooksPage() {
   const [books, setBooks] = useState<BackofficeBook[]>(mockBooks);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<BookFilters>({});
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<BackofficeBook | null>(null);
 
   // Filtrar books
   const filteredBooks = books.filter(book => {
@@ -60,6 +62,16 @@ export default function BooksPage() {
     (filters.is_active !== undefined ? 1 : 0) +
     (filters.has_missing_goals ? 1 : 0) +
     (filters.performance_level?.length || 0);
+
+  const handleEditBook = (book: BackofficeBook) => {
+    setBooks(prev => prev.map(b => b.id === book.id ? book : b));
+    setSelectedBook(book);
+  };
+
+  const handleDeleteBook = (id: string) => {
+    setBooks(prev => prev.filter(b => b.id !== id));
+    setSelectedBook(null);
+  };
 
   return (
     <div className="space-y-4">
@@ -183,10 +195,20 @@ export default function BooksPage() {
             <BookCard
               key={book.id}
               book={book}
-              onClick={() => console.log('Open book', book.id)}
+              onClick={() => setSelectedBook(book)}
             />
           ))}
         </div>
+      )}
+
+      {/* Drawer de Detalhes */}
+      {selectedBook && (
+        <BookDrawer
+          book={selectedBook}
+          onClose={() => setSelectedBook(null)}
+          onEdit={handleEditBook}
+          onDelete={handleDeleteBook}
+        />
       )}
     </div>
   );
