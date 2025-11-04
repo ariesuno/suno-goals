@@ -23,19 +23,19 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
 
   return (
     <div className="w-full overflow-x-auto" data-indicator-table>
-      <div className="min-w-[700px]">
+      <div className="min-w-[650px]">
       {/* Cabeçalho - 3 blocos separados */}
       <div className="flex gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
         {/* Bloco 1: INDICADOR */}
-        <div className="w-[160px] md:w-[180px] lg:w-[200px] xl:w-[220px] flex-shrink-0">
-          <div className="bg-suno-red text-white font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base px-2 md:px-3 lg:px-4 py-2 md:py-2.5 border border-neutral-2">
+        <div className="w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] flex-shrink-0">
+          <div className="bg-suno-red text-white font-display font-bold text-[10px] md:text-[11px] lg:text-xs xl:text-sm px-1.5 md:px-2 lg:px-3 py-2 md:py-2.5 border border-neutral-2">
             INDICADOR
           </div>
         </div>
 
         {/* Bloco 2: ACC */}
-        <div className="w-[65px] md:w-[75px] lg:w-[85px] xl:w-[95px] flex-shrink-0">
-          <div className="bg-suno-red text-white font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base px-1.5 md:px-2 py-2 md:py-2.5 text-center border border-neutral-2">
+        <div className="w-[60px] md:w-[70px] lg:w-[80px] xl:w-[90px] flex-shrink-0">
+          <div className="bg-suno-red text-white font-display font-bold text-[10px] md:text-[11px] lg:text-xs xl:text-sm px-1 md:px-1.5 py-2 md:py-2.5 text-center border border-neutral-2">
             Acc
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
             {months.map((month, index) => (
               <div
                 key={month.key}
-                className={`bg-suno-red text-white font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base px-1 md:px-1.5 lg:px-2 py-2 md:py-2.5 text-center ${
+                className={`bg-suno-red text-white font-display font-bold text-[10px] md:text-[11px] lg:text-xs xl:text-sm px-0.5 md:px-1 lg:px-1.5 py-2 md:py-2.5 text-center ${
                   index < months.length - 1 ? 'border-r border-neutral-2' : ''
                 }`}
               >
