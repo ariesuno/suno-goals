@@ -23,19 +23,19 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
 
   return (
     <div className="w-full overflow-x-auto" data-indicator-table>
-      <div className="min-w-[800px]">
+      <div className="min-w-[700px]">
       {/* Cabeçalho - 3 blocos separados */}
-      <div className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+      <div className="flex gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
         {/* Bloco 1: INDICADOR */}
-        <div className="w-[200px] md:w-[220px] lg:w-[250px] xl:w-[280px] flex-shrink-0">
-          <div className="bg-suno-red text-white font-display font-bold text-xs md:text-sm lg:text-base xl:text-lg px-3 md:px-4 lg:px-5 py-2.5 md:py-3 border border-neutral-2">
+        <div className="w-[160px] md:w-[180px] lg:w-[200px] xl:w-[220px] flex-shrink-0">
+          <div className="bg-suno-red text-white font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base px-2 md:px-3 lg:px-4 py-2 md:py-2.5 border border-neutral-2">
             INDICADOR
           </div>
         </div>
 
         {/* Bloco 2: ACC */}
-        <div className="w-[80px] md:w-[90px] lg:w-[100px] xl:w-[110px] flex-shrink-0">
-          <div className="bg-suno-red text-white font-display font-bold text-xs md:text-sm lg:text-base xl:text-lg px-2 md:px-3 py-2.5 md:py-3 text-center border border-neutral-2">
+        <div className="w-[65px] md:w-[75px] lg:w-[85px] xl:w-[95px] flex-shrink-0">
+          <div className="bg-suno-red text-white font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base px-1.5 md:px-2 py-2 md:py-2.5 text-center border border-neutral-2">
             Acc
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
             {months.map((month, index) => (
               <div
                 key={month.key}
-                className={`bg-suno-red text-white font-display font-bold text-xs md:text-sm lg:text-base xl:text-lg px-2 md:px-3 py-2.5 md:py-3 text-center ${
+                className={`bg-suno-red text-white font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base px-1 md:px-1.5 lg:px-2 py-2 md:py-2.5 text-center ${
                   index < months.length - 1 ? 'border-r border-neutral-2' : ''
                 }`}
               >
@@ -58,10 +58,10 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
       </div>
 
       {/* Espaço entre header e indicadores */}
-      <div className="h-3 sm:h-4 md:h-5 lg:h-6"></div>
+      <div className="h-2.5 sm:h-3 md:h-4 lg:h-5"></div>
 
       {/* Indicadores */}
-      <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
+      <div className="space-y-2.5 sm:space-y-3 md:space-y-4 lg:space-y-5">
         {data.indicators.map((indicator) => (
           <IndicatorRow key={indicator.id} indicator={indicator} />
         ))}

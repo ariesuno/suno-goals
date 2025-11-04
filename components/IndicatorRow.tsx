@@ -52,27 +52,27 @@ const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = f
   return (
     <div className={`flex flex-col h-full ${borderRightClass}`}>
       {/* Linha 1: Meta */}
-      <div className="px-1.5 py-1.5 md:px-2 md:py-1.5 lg:px-3 lg:py-2 text-center text-xs md:text-sm lg:text-base text-neutral-5 border-b border-neutral-2 min-h-[26px] md:min-h-[28px] lg:min-h-[32px] flex items-center justify-center bg-white">
+      <div className="px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[10px] md:text-xs lg:text-sm text-neutral-5 border-b border-neutral-2 min-h-[22px] md:min-h-[24px] lg:min-h-[26px] flex items-center justify-center bg-white">
         {formatValue(data.meta, unit)}
       </div>
       
       {/* Linha 2: Real */}
-      <div className={`px-1.5 py-1.5 md:px-2 md:py-1.5 lg:px-3 lg:py-2 text-center text-sm md:text-base lg:text-lg font-semibold border-b border-neutral-2 min-h-[28px] md:min-h-[32px] lg:min-h-[36px] flex items-center justify-center bg-white ${
+      <div className={`px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[11px] md:text-sm lg:text-base font-semibold border-b border-neutral-2 min-h-[24px] md:min-h-[26px] lg:min-h-[30px] flex items-center justify-center bg-white ${
         hasData ? 'text-neutral-10' : 'text-neutral-3'
       }`}>
         {formatValue(data.real, unit)}
       </div>
       
       {/* Linha 3: Percentual - SEM borda bottom para evitar faixa */}
-      <div className={`px-1.5 py-1.5 md:px-2 md:py-1.5 lg:px-3 lg:py-2 text-center text-sm md:text-base lg:text-lg font-bold min-h-[28px] md:min-h-[32px] lg:min-h-[36px] flex items-center justify-center gap-1 ${
+      <div className={`px-1 py-1 md:px-1.5 md:py-1 lg:px-2 lg:py-1.5 text-center text-[11px] md:text-sm lg:text-base font-bold min-h-[24px] md:min-h-[26px] lg:min-h-[30px] flex items-center justify-center gap-0.5 ${
         hasData 
           ? `${statusColor} text-white` 
           : 'bg-neutral-1 text-neutral-5'
       }`}>
         {showIcon && data.percentage > 0 && (
           direction === 'up' ? 
-            <ArrowUp className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" /> : 
-            <ArrowDown className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
+            <ArrowUp className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-3.5 lg:h-3.5" /> : 
+            <ArrowDown className="w-2.5 h-2.5 md:w-3 md:h-3 lg:w-3.5 lg:h-3.5" />
         )}
         {formatPercentage(data.percentage)}
       </div>
@@ -97,18 +97,18 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
   ];
 
   return (
-    <div className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+    <div className="flex gap-1.5 sm:gap-2 md:gap-3 lg:gap-4">
       {/* Bloco 1: Nome do Indicador */}
-      <div className="w-[200px] md:w-[220px] lg:w-[250px] xl:w-[280px] flex-shrink-0">
+      <div className="w-[160px] md:w-[180px] lg:w-[200px] xl:w-[220px] flex-shrink-0">
         <div className="border border-neutral-2 bg-white shadow-sm h-full">
-          <div className="flex items-center justify-center px-3 md:px-4 lg:px-5 font-display font-bold text-xs md:text-sm lg:text-base xl:text-lg h-full min-h-[90px] md:min-h-[100px] lg:min-h-[110px]">
+          <div className="flex items-center justify-center px-2 md:px-3 lg:px-4 font-display font-bold text-[11px] md:text-xs lg:text-sm xl:text-base h-full min-h-[70px] md:min-h-[76px] lg:min-h-[82px]">
             {indicator.name}
           </div>
         </div>
       </div>
 
       {/* Bloco 2: ACC */}
-      <div className="w-[80px] md:w-[90px] lg:w-[100px] xl:w-[110px] flex-shrink-0">
+      <div className="w-[65px] md:w-[75px] lg:w-[85px] xl:w-[95px] flex-shrink-0">
         <div className="border border-neutral-2 bg-white shadow-sm">
           <MonthCell 
             data={indicator.accumulated} 
