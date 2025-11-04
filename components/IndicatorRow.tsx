@@ -42,16 +42,28 @@ type CellProps = {
 
 const MonthCell = ({ data, unit, direction, showIcon = false }: CellProps) => {
   const statusColor = getStatusColor(data.percentage, direction);
+  const hasData = data.real !== 0 || data.percentage !== 0;
   
   return (
     <div className="flex flex-col">
-      <div className="px-2 py-1.5 text-center text-xs text-neutral-5">
+      {/* Linha 1: Meta */}
+      <div className="px-2 py-1.5 text-center text-xs text-neutral-5 border-b border-neutral-2 min-h-[28px] flex items-center justify-center">
         {formatValue(data.meta, unit)}
       </div>
-      <div className="px-2 py-1.5 text-center text-sm font-semibold">
+      
+      {/* Linha 2: Real */}
+      <div className={`px-2 py-1.5 text-center text-sm font-semibold border-b border-neutral-2 min-h-[32px] flex items-center justify-center ${
+        hasData ? 'text-neutral-10' : 'text-neutral-3'
+      }`}>
         {formatValue(data.real, unit)}
       </div>
-      <div className={`px-2 py-1.5 text-center text-sm font-bold text-white ${statusColor} flex items-center justify-center gap-1`}>
+      
+      {/* Linha 3: Percentual */}
+      <div className={`px-2 py-1.5 text-center text-sm font-bold min-h-[32px] flex items-center justify-center gap-1 ${
+        hasData 
+          ? `${statusColor} text-white` 
+          : 'bg-neutral-2 text-neutral-5'
+      }`}>
         {showIcon && data.percentage > 0 && (
           direction === 'up' ? 
             <ArrowUp className="w-3 h-3" /> : 
