@@ -1,6 +1,7 @@
-import { BackofficeBook } from '@/types/backoffice';
+import { BackofficeBook, MonthlyGoals } from '@/types/backoffice';
 import { X, Edit2, Trash2, User, Users, Calendar, TrendingUp, AlertCircle, CheckCircle, History, Plus } from 'lucide-react';
 import { useState } from 'react';
+import EditGoalsModal from './EditGoalsModal';
 
 type BookDrawerProps = {
   book: BackofficeBook;
@@ -33,10 +34,51 @@ const monthLabels = {
 export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDrawerProps) {
   const [activeTab, setActiveTab] = useState<'info' | 'indicators' | 'history' | 'performance'>('info');
   const [isEditing, setIsEditing] = useState(false);
+  const [editingGoalsIndex, setEditingGoalsIndex] = useState<number | null>(null);
+  const [bookData, setBookData] = useState(book);
 
-  const performanceConfig = book.performance_level 
-    ? performanceLevelConfig[book.performance_level]
+  const performanceConfig = bookData.performance_level 
+    ? performanceLevelConfig[bookData.performance_level]
     : null;
+
+  const handleSaveGoals = (indicatorIndex: number, goals: MonthlyGoals) => {
+    const updatedIndicators = [...bookData.indicators];
+    updatedIndicators[indicatorIndex].goals = goals;
+    
+    // Recalcular missing goals
+    const monthKeys: (keyof MonthlyGoals)[] = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    const missingCount = monthKeys.filter(month => goals[month] === undefined || goals[month] === null).length;
+    updatedIndicators[indicatorIndex].has_missing_goals = missingCount > 0;
+    updatedIndicators[indicatorIndex].missing_goals_count = missingCount;
+
+    const newBookData = {
+      ...bookData,
+      indicators: updatedIndicators,
+      indicators_with_missing_goals: updatedIndicators.filter(i => i.has_missing_goals).length,
+    };
+
+    setBookData(newBookData);
+    onEdit(newBookData);
+  };
+
+  const handleRemoveIndicator = (indicatorId: string) => {
+    if (bookData.total_indicators <= 1) {
+      alert('O book precisa ter pelo menos 1 indicador');
+      return;
+    }
+
+    if (confirm('Tem certeza que deseja remover este indicador do book?')) {
+      const updatedIndicators = bookData.indicators.filter(i => i.indicator_id !== indicatorId);
+      const newBookData = {
+        ...bookData,
+        indicators: updatedIndicators,
+        total_indicators: updatedIndicators.length,
+        indicators_with_missing_goals: updatedIndicators.filter(i => i.has_missing_goals).length,
+      };
+      setBookData(newBookData);
+      onEdit(newBookData);
+    }
+  };
 
   return (
     <>
@@ -53,20 +95,20 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <h2 className="font-display font-bold text-xl md:text-2xl text-neutral-10 mb-2">
-                {book.name}
+                {bookData.name}
               </h2>
               <div className="flex items-center gap-2 text-sm text-neutral-8">
-                {book.owner.type === 'person' ? (
+                {bookData.owner.type === 'person' ? (
                   <User className="w-4 h-4" />
                 ) : (
                   <Users className="w-4 h-4" />
                 )}
-                <span className="font-medium">{book.owner.name}</span>
-                {book.owner.role && (
-                  <span className="text-neutral-5">• {book.owner.role}</span>
+                <span className="font-medium">{bookData.owner.name}</span>
+                {bookData.owner.role && (
+                  <span className="text-neutral-5">• {bookData.owner.role}</span>
                 )}
-                {book.owner.team_members_count && (
-                  <span className="text-neutral-5">• {book.owner.team_members_count} membros</span>
+                {bookData.owner.team_members_count && (
+                  <span className="text-neutral-5">• {bookData.owner.team_members_count} membros</span>
                 )}
               </div>
             </div>
@@ -125,10 +167,10 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
               }`}
             >
               <TrendingUp className="w-4 h-4" />
-              Indicadores ({book.total_indicators})
-              {book.indicators_with_missing_goals > 0 && (
+              Indicadores ({bookData.total_indicators})
+              {bookData.indicators_with_missing_goals > 0 && (
                 <span className="px-1.5 py-0.5 bg-suno-red text-white text-xs font-bold rounded-full">
-                  {book.indicators_with_missing_goals}
+                  {bookData.indicators_with_missing_goals}
                 </span>
               )}
             </button>
@@ -167,7 +209,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                 </label>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-neutral-5" />
-                  <span className="text-neutral-10">{book.year}</span>
+                  <span className="text-neutral-10">{bookData.year}</span>
                 </div>
               </div>
 
@@ -177,11 +219,11 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                   Status
                 </label>
                 <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium ${
-                  book.is_active
+                  bookData.is_active
                     ? 'bg-neutral-1 text-neutral-10'
                     : 'bg-neutral-1 text-neutral-5'
                 }`}>
-                  {book.is_active ? (
+                  {bookData.is_active ? (
                     <>
                       <CheckCircle className="w-4 h-4" />
                       Ativo
@@ -205,7 +247,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                     <div
                       key={q}
                       className={`flex items-center justify-center w-12 h-12 rounded-lg font-semibold text-sm ${
-                        book.active_quarters.includes(q)
+                        bookData.active_quarters.includes(q)
                           ? 'bg-neutral-10 text-white'
                           : 'bg-neutral-1 text-neutral-5'
                       }`}
@@ -215,20 +257,20 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                   ))}
                 </div>
                 <p className="text-xs text-neutral-5 mt-2">
-                  {book.active_quarters.length === 4
+                  {bookData.active_quarters.length === 4
                     ? 'Ativo o ano todo'
-                    : `Ativo em ${book.active_quarters.length} quarter${book.active_quarters.length > 1 ? 's' : ''}`}
+                    : `Ativo em ${bookData.active_quarters.length} quarter${bookData.active_quarters.length > 1 ? 's' : ''}`}
                 </p>
               </div>
 
               {/* Descrição */}
-              {book.description && (
+              {bookData.description && (
                 <div>
                   <label className="block text-sm font-medium text-neutral-8 mb-2">
                     Descrição
                   </label>
                   <p className="text-sm text-neutral-10 bg-neutral-1 p-3 rounded-lg">
-                    {book.description}
+                    {bookData.description}
                   </p>
                 </div>
               )}
@@ -257,7 +299,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
 
           {activeTab === 'indicators' && (
             <div className="space-y-4">
-              {book.indicators.map((indicator, index) => (
+              {bookData.indicators.map((indicator, index) => (
                 <div
                   key={indicator.id}
                   className="bg-white border border-neutral-2 rounded-lg p-4 hover:border-neutral-5 transition-colors"
@@ -356,10 +398,16 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
 
                   {/* Actions */}
                   <div className="mt-3 pt-3 border-t border-neutral-2 flex gap-2">
-                    <button className="flex-1 px-3 py-1.5 text-xs font-medium text-neutral-10 bg-neutral-1 rounded hover:bg-neutral-2 transition-colors">
+                    <button 
+                      onClick={() => setEditingGoalsIndex(index)}
+                      className="flex-1 px-3 py-1.5 text-xs font-medium text-neutral-10 bg-neutral-1 rounded hover:bg-neutral-2 transition-colors"
+                    >
                       Editar Metas
                     </button>
-                    <button className="px-3 py-1.5 text-xs font-medium text-suno-red hover:bg-red-50 rounded transition-colors">
+                    <button 
+                      onClick={() => handleRemoveIndicator(indicator.indicator_id)}
+                      className="px-3 py-1.5 text-xs font-medium text-suno-red hover:bg-red-50 rounded transition-colors"
+                    >
                       Remover
                     </button>
                   </div>
@@ -367,10 +415,10 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
               ))}
 
               {/* Add More */}
-              {book.total_indicators < 6 && (
+              {bookData.total_indicators < 6 && (
                 <button className="w-full py-3 border-2 border-dashed border-neutral-3 rounded-lg text-sm font-medium text-neutral-8 hover:border-neutral-5 hover:text-neutral-10 transition-colors flex items-center justify-center gap-2">
                   <Plus className="w-4 h-4" />
-                  Adicionar Indicador ({book.total_indicators}/6)
+                  Adicionar Indicador ({bookData.total_indicators}/6)
                 </button>
               )}
             </div>
@@ -382,7 +430,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
               <div className="bg-neutral-1 rounded-xl p-6 text-center">
                 <p className="text-sm text-neutral-5 mb-2">Atingimento Acumulado</p>
                 <div className="text-5xl font-bold text-neutral-10 mb-2">
-                  {book.overall_performance}%
+                  {bookData.overall_performance}%
                 </div>
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${performanceConfig.bg}`}>
                   <span className={`text-sm font-semibold ${performanceConfig.color}`}>
@@ -394,12 +442,12 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
               {/* Indicators Achieving */}
               <div>
                 <p className="text-sm font-medium text-neutral-8 mb-3">
-                  Indicadores Batendo Meta: {book.indicators_achieving}/{book.total_indicators} ({Math.round((book.indicators_achieving! / book.total_indicators) * 100)}%)
+                  Indicadores Batendo Meta: {bookData.indicators_achieving}/{bookData.total_indicators} ({Math.round((bookData.indicators_achieving! / bookData.total_indicators) * 100)}%)
                 </p>
                 <div className="w-full h-2 bg-neutral-1 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-neutral-10 transition-all"
-                    style={{ width: `${(book.indicators_achieving! / book.total_indicators) * 100}%` }}
+                    style={{ width: `${(bookData.indicators_achieving! / bookData.total_indicators) * 100}%` }}
                   />
                 </div>
               </div>
@@ -408,7 +456,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
               <div>
                 <p className="text-sm font-medium text-neutral-8 mb-3">Detalhamento:</p>
                 <div className="space-y-2">
-                  {book.indicators.map((indicator) => (
+                  {bookData.indicators.map((indicator) => (
                     <div
                       key={indicator.id}
                       className="flex items-center justify-between p-3 bg-neutral-1 rounded-lg"
@@ -431,8 +479,8 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
 
           {activeTab === 'history' && (
             <div className="space-y-3">
-              {book.history && book.history.length > 0 ? (
-                book.history.map((entry) => (
+              {bookData.history && bookData.history.length > 0 ? (
+                bookData.history.map((entry) => (
                   <div
                     key={`${entry.quarter}-${entry.year}`}
                     className="bg-neutral-1 rounded-lg p-4"
@@ -485,6 +533,17 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
           )}
         </div>
       </div>
+
+      {/* Modal de Edição de Metas */}
+      {editingGoalsIndex !== null && bookData.indicators[editingGoalsIndex] && (
+        <EditGoalsModal
+          indicatorName={bookData.indicators[editingGoalsIndex].indicator_name}
+          indicatorFormat={bookData.indicators[editingGoalsIndex].indicator_format}
+          currentGoals={bookData.indicators[editingGoalsIndex].goals}
+          onSave={(goals) => handleSaveGoals(editingGoalsIndex, goals)}
+          onClose={() => setEditingGoalsIndex(null)}
+        />
+      )}
     </>
   );
 }
