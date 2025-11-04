@@ -11,7 +11,7 @@ type HeaderProps = {
 };
 
 export default function Header({ 
-  title = 'Book de Indicadores',
+  title = 'Meus Indicadores',
   collaboratorName,
   currentYear,
   showYearSelector = true,
@@ -40,7 +40,7 @@ export default function Header({
       
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display font-bold text-3xl text-neutral-10 mb-2">
+          <h1 className="font-display font-bold text-xl md:text-2xl lg:text-3xl text-neutral-10 mb-2">
             {title}
           </h1>
           {collaboratorName && (

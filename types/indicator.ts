@@ -32,3 +32,19 @@ export type BookData = {
   indicators: IndicatorType[];
 };
 
+export type BookOwnerType = 'person' | 'team';
+
+export type BookOwner = {
+  id: string;
+  name: string;
+  type: BookOwnerType;
+  role?: string; // Ex: "Head de Dados e CRM", "Gerente", etc.
+  teamName?: string; // Ex: "Time de Dados", "Squad CRM"
+};
+
+export type TeamBook = {
+  id: string;
+  owner: BookOwner;
+  data: BookData;
+};
+
