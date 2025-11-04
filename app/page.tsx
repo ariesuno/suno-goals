@@ -1,5 +1,5 @@
 import Header from '@/components/Header';
-import IndicatorTable from '@/components/IndicatorTable';
+import EditableIndicatorTable from '@/components/EditableIndicatorTable';
 import TeamBooksSection from '@/components/TeamBooksSection';
 import { mockBookData } from '@/lib/mockData';
 import { mockTeamBooks } from '@/lib/mockTeamBooks';
@@ -15,7 +15,7 @@ export default function Home() {
 
         {/* Meus Indicadores */}
         <div className="print:m-0" data-indicator-table>
-          <IndicatorTable data={mockBookData} />
+          <EditableIndicatorTable initialData={mockBookData} />
         </div>
 
         {/* Books do Time */}

@@ -16,6 +16,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Entregas Estratégicas',
           unit: '%',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 90,
             real: 85,
@@ -41,6 +42,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Satisfação do Cliente',
           unit: '%',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 85,
             real: 88,
@@ -66,6 +68,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Budget',
           unit: 'R$',
           direction: 'down',
+          editable: false,
           accumulated: {
             meta: 1500000,
             real: 1350000,
@@ -104,6 +107,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Qualidade dos Dados',
           unit: '%',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 95,
             real: 92,
@@ -129,6 +133,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Pipelines Entregues',
           unit: '#',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 12,
             real: 11,
@@ -167,6 +172,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Conversão de Leads',
           unit: '%',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 25,
             real: 28,
@@ -192,6 +198,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Tempo de Resposta',
           unit: 'H$',
           direction: 'down',
+          editable: false,
           accumulated: {
             meta: 24,
             real: 18,
@@ -217,6 +224,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'NPS',
           unit: '#',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 70,
             real: 75,
@@ -255,6 +263,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Features Entregues',
           unit: '#',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 18,
             real: 16,
@@ -280,6 +289,7 @@ export const mockTeamBooks: TeamBook[] = [
           name: 'Satisfação dos Stakeholders',
           unit: '%',
           direction: 'up',
+          editable: false,
           accumulated: {
             meta: 80,
             real: 85,

@@ -7,6 +7,7 @@ export const mockBookData: BookData = {
       name: '(ACV) Indicadores de negócio',
       unit: '%',
       direction: 'up',
+      editable: true, // Usuário preenche
       accumulated: {
         meta: 80,
         real: 44,
@@ -32,6 +33,7 @@ export const mockBookData: BookData = {
       name: 'Entrega das Squads',
       unit: '#',
       direction: 'up',
+      editable: true, // Usuário preenche
       accumulated: {
         meta: 80,
         real: 83,
@@ -57,6 +59,7 @@ export const mockBookData: BookData = {
       name: 'Qualidade de entrega',
       unit: '%',
       direction: 'up',
+      editable: true, // Usuário preenche
       accumulated: {
         meta: 80,
         real: 83,
@@ -82,6 +85,7 @@ export const mockBookData: BookData = {
       name: 'Orçamento',
       unit: 'R$',
       direction: 'down',
+      editable: false, // Apenas visualização
       accumulated: {
         meta: 3471797,
         real: 3105005,

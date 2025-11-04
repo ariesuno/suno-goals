@@ -11,6 +11,7 @@ export type IndicatorType = {
   name: string;
   unit: '%' | '#' | 'R$' | 'H$';
   direction: IndicatorDirection;
+  editable: boolean; // Se o usuário pode editar o "realizado"
   accumulated: MonthData;
   months: {
     jan: MonthData;

@@ -1,11 +1,16 @@
-import { BookData } from '@/types/indicator';
+import { BookData, IndicatorType } from '@/types/indicator';
 import IndicatorRow from './IndicatorRow';
 
 type IndicatorTableProps = {
   data: BookData;
+  onCellUpdate?: (
+    indicatorId: string,
+    monthKey: keyof IndicatorType['months'],
+    newRealValue: number
+  ) => void;
 };
 
-export default function IndicatorTable({ data }: IndicatorTableProps) {
+export default function IndicatorTable({ data, onCellUpdate }: IndicatorTableProps) {
   const months = [
     { key: 'jan', label: 'J' },
     { key: 'feb', label: 'F' },
@@ -63,7 +68,11 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
       {/* Indicadores */}
       <div className="space-y-2.5 sm:space-y-3 md:space-y-4 lg:space-y-5">
         {data.indicators.map((indicator) => (
-          <IndicatorRow key={indicator.id} indicator={indicator} />
+          <IndicatorRow 
+            key={indicator.id} 
+            indicator={indicator}
+            onCellUpdate={onCellUpdate}
+          />
         ))}
       </div>
       </div>

@@ -1,8 +1,13 @@
 import { IndicatorType, MonthData } from '@/types/indicator';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import EditableCell from './EditableCell';
 
 type IndicatorRowProps = {
   indicator: IndicatorType;
+  onCellUpdate?: (
+    indicatorId: string,
+    monthKey: keyof IndicatorType['months'],
+    newRealValue: number
+  ) => void;
 };
 
 const getStatusColor = (percentage: number, direction: 'up' | 'down'): string => {
@@ -37,14 +42,15 @@ type CellProps = {
   data: MonthData;
   unit: string;
   direction: 'up' | 'down';
-  showIcon?: boolean;
+  editable: boolean;
+  onSave?: (newValue: number) => void;
 };
 
 type MonthCellProps = CellProps & {
   hasRightBorder?: boolean;
 };
 
-const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = false }: MonthCellProps) => {
+const MonthCell = ({ data, unit, direction, editable, onSave, hasRightBorder = false }: MonthCellProps) => {
   const statusColor = getStatusColor(data.percentage, direction);
   const hasData = data.real !== 0 || data.percentage !== 0;
   const borderRightClass = hasRightBorder ? 'border-r border-neutral-2' : '';
@@ -56,12 +62,23 @@ const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = f
         {formatValue(data.meta, unit)}
       </div>
       
-      {/* Linha 2: Real */}
-      <div className={`px-0.5 py-0.5 md:px-1 md:py-1 lg:px-1.5 lg:py-1 text-center text-[10px] md:text-[11px] lg:text-sm font-semibold border-b border-neutral-2 h-[22px] md:h-[24px] lg:h-[26px] flex items-center justify-center bg-white ${
-        hasData ? 'text-neutral-10' : 'text-neutral-3'
-      }`}>
-        {formatValue(data.real, unit)}
-      </div>
+      {/* Linha 2: Real - Editável se editable = true */}
+      {editable && onSave ? (
+        <EditableCell
+          value={data.real}
+          meta={data.meta}
+          unit={unit}
+          direction={direction}
+          onSave={onSave}
+          editable={editable}
+        />
+      ) : (
+        <div className={`px-0.5 py-0.5 md:px-1 md:py-1 lg:px-1.5 lg:py-1 text-center text-[10px] md:text-[11px] lg:text-sm font-semibold border-b border-neutral-2 h-[22px] md:h-[24px] lg:h-[26px] flex items-center justify-center bg-white ${
+          hasData ? 'text-neutral-10' : 'text-neutral-3'
+        }`}>
+          {formatValue(data.real, unit)}
+        </div>
+      )}
       
       {/* Linha 3: Percentual - SEM borda bottom para evitar faixa e SEM setas */}
       <div className={`px-0.5 py-0.5 md:px-1 md:py-1 lg:px-1.5 lg:py-1 text-center text-[10px] md:text-[11px] lg:text-sm font-bold h-[22px] md:h-[24px] lg:h-[26px] flex items-center justify-center ${
@@ -75,7 +92,7 @@ const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = f
   );
 };
 
-export default function IndicatorRow({ indicator }: IndicatorRowProps) {
+export default function IndicatorRow({ indicator, onCellUpdate }: IndicatorRowProps) {
   const months = [
     { key: 'jan', label: 'J' },
     { key: 'feb', label: 'F' },
@@ -109,6 +126,7 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
             data={indicator.accumulated} 
             unit={indicator.unit} 
             direction={indicator.direction}
+            editable={false}
           />
         </div>
       </div>
@@ -123,7 +141,12 @@ export default function IndicatorRow({ indicator }: IndicatorRowProps) {
                 data={indicator.months[month.key as keyof typeof indicator.months]}
                 unit={indicator.unit}
                 direction={indicator.direction}
-                showIcon={index === 0}
+                editable={indicator.editable}
+                onSave={
+                  indicator.editable && onCellUpdate
+                    ? (newValue) => onCellUpdate(indicator.id, month.key as keyof typeof indicator.months, newValue)
+                    : undefined
+                }
                 hasRightBorder={index < months.length - 1}
               />
             ))}
