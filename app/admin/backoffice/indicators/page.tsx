@@ -58,19 +58,15 @@ export default function IndicatorsPage() {
   };
 
   const handleEditIndicator = (indicator: BackofficeIndicator) => {
-    setEditingIndicator(indicator);
-    setShowForm(true);
-    setSelectedIndicator(null);
+    // Atualizar o indicador no estado
+    setIndicators(prev => prev.map(i => i.id === indicator.id ? indicator : i));
+    // Atualizar o indicador selecionado para refletir as mudanças no drawer
+    setSelectedIndicator(indicator);
   };
 
   const handleSaveIndicator = (indicator: BackofficeIndicator) => {
-    if (editingIndicator) {
-      // Editar
-      setIndicators(prev => prev.map(i => i.id === indicator.id ? indicator : i));
-    } else {
-      // Criar
-      setIndicators(prev => [...prev, { ...indicator, id: Date.now().toString() }]);
-    }
+    // Criar novo indicador
+    setIndicators(prev => [...prev, { ...indicator, id: Date.now().toString() }]);
     setShowForm(false);
     setEditingIndicator(null);
   };
