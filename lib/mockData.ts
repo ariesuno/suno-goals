@@ -9,8 +9,8 @@ export const mockBookData: BookData = {
       direction: 'up',
       accumulated: {
         meta: 80,
-        real: 46,
-        percentage: 58,
+        real: 50,
+        percentage: 63,
       },
       months: {
         jan: { meta: 80, real: 80, percentage: 100 },
