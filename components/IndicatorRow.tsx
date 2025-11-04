@@ -52,7 +52,7 @@ const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = f
   return (
     <div className={`flex flex-col h-full ${borderRightClass}`}>
       {/* Linha 1: Meta */}
-      <div className={`px-2 py-1.5 text-center text-xs text-neutral-5 border-b border-neutral-2 min-h-[28px] flex items-center justify-center bg-white`}>
+      <div className="px-2 py-1.5 text-center text-xs text-neutral-5 border-b border-neutral-2 min-h-[28px] flex items-center justify-center bg-white">
         {formatValue(data.meta, unit)}
       </div>
       
@@ -63,11 +63,11 @@ const MonthCell = ({ data, unit, direction, showIcon = false, hasRightBorder = f
         {formatValue(data.real, unit)}
       </div>
       
-      {/* Linha 3: Percentual */}
+      {/* Linha 3: Percentual - SEM borda bottom para evitar faixa */}
       <div className={`px-2 py-1.5 text-center text-sm font-bold min-h-[32px] flex items-center justify-center gap-1 ${
         hasData 
           ? `${statusColor} text-white` 
-          : 'bg-neutral-2 text-neutral-5'
+          : 'bg-neutral-1 text-neutral-5'
       }`}>
         {showIcon && data.percentage > 0 && (
           direction === 'up' ? 
