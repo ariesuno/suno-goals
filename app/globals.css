@@ -61,3 +61,27 @@ body {
 .font-display {
   font-family: var(--font-display);
 }
+
+/* Custom Scrollbar */
+.overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-suno-red) var(--color-neutral-1);
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: var(--color-neutral-1);
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: var(--color-suno-red);
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #b81b20;
+}
