@@ -22,7 +22,7 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full" data-indicator-table>
       {/* Cabeçalho - 3 blocos separados */}
       <div className="flex gap-4">
         {/* Bloco 1: INDICADOR */}
