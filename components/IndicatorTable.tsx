@@ -24,17 +24,17 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
   return (
     <div className="w-full" data-indicator-table>
       {/* Cabeçalho - 3 blocos separados */}
-      <div className="flex gap-4">
+      <div className="flex gap-3 md:gap-4 lg:gap-6">
         {/* Bloco 1: INDICADOR */}
-        <div className="w-[250px]">
-          <div className="bg-suno-red text-white font-display font-bold text-sm px-4 py-3 border border-neutral-2">
+        <div className="w-[250px] md:w-[280px] lg:w-[320px]">
+          <div className="bg-suno-red text-white font-display font-bold text-sm md:text-base lg:text-lg px-3 md:px-4 lg:px-6 py-2.5 md:py-3 lg:py-3.5 border border-neutral-2">
             INDICADOR
           </div>
         </div>
 
         {/* Bloco 2: ACC */}
-        <div className="w-[100px]">
-          <div className="bg-suno-red text-white font-display font-bold text-sm px-3 py-3 text-center border border-neutral-2">
+        <div className="w-[100px] md:w-[120px] lg:w-[140px]">
+          <div className="bg-suno-red text-white font-display font-bold text-sm md:text-base lg:text-lg px-2 md:px-3 lg:px-4 py-2.5 md:py-3 lg:py-3.5 text-center border border-neutral-2">
             Acc
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
             {months.map((month, index) => (
               <div
                 key={month.key}
-                className={`bg-suno-red text-white font-display font-bold text-sm px-3 py-3 text-center ${
+                className={`bg-suno-red text-white font-display font-bold text-sm md:text-base lg:text-lg px-2 md:px-3 lg:px-4 py-2.5 md:py-3 lg:py-3.5 text-center ${
                   index < months.length - 1 ? 'border-r border-neutral-2' : ''
                 }`}
               >
@@ -57,10 +57,10 @@ export default function IndicatorTable({ data }: IndicatorTableProps) {
       </div>
 
       {/* Espaço entre header e indicadores */}
-      <div className="h-6"></div>
+      <div className="h-4 md:h-5 lg:h-6"></div>
 
       {/* Indicadores */}
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-5 lg:space-y-6">
         {data.indicators.map((indicator) => (
           <IndicatorRow key={indicator.id} indicator={indicator} />
         ))}
