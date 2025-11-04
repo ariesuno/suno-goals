@@ -2,6 +2,18 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
+  // 🚧 DESENVOLVIMENTO: Autenticação desabilitada
+  // TODO: Habilitar autenticação em produção
+  
+  // Permite acesso direto ao backoffice sem autenticação
+  if (process.env.NODE_ENV === 'development') {
+    return NextResponse.next();
+  }
+
+  // ========================================
+  // PRODUÇÃO: Código de autenticação abaixo
+  // ========================================
+  
   let response = NextResponse.next({
     request: {
       headers: request.headers,

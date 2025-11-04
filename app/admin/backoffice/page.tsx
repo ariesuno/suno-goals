@@ -1,4 +1,3 @@
-import { getCurrentUser } from '@/lib/auth/utils';
 import { 
   Users, 
   TrendingUp, 
@@ -9,7 +8,11 @@ import {
 } from 'lucide-react';
 
 export default async function BackofficeDashboard() {
-  const user = await getCurrentUser();
+  // 🚧 DESENVOLVIMENTO: Mock user
+  const user = {
+    full_name: 'Admin FP&A',
+    email: 'admin@suno.com.br',
+  };
 
   // TODO: Fetch real data from Supabase
   const stats = {
