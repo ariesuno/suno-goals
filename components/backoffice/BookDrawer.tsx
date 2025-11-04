@@ -1,7 +1,8 @@
 import { BackofficeBook, MonthlyGoals } from '@/types/backoffice';
-import { X, Edit2, Trash2, User, Users, Calendar, TrendingUp, AlertCircle, CheckCircle, History, Plus } from 'lucide-react';
+import { X, Edit2, Trash2, User, Users, Calendar, TrendingUp, AlertCircle, CheckCircle, History, Plus, Eye } from 'lucide-react';
 import { useState } from 'react';
 import EditGoalsModal from './EditGoalsModal';
+import { useRouter } from 'next/navigation';
 
 type BookDrawerProps = {
   book: BackofficeBook;
@@ -32,10 +33,18 @@ const monthLabels = {
 };
 
 export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDrawerProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'info' | 'indicators' | 'history' | 'performance'>('info');
   const [isEditing, setIsEditing] = useState(false);
   const [editingGoalsIndex, setEditingGoalsIndex] = useState<number | null>(null);
   const [bookData, setBookData] = useState(book);
+
+  const handleViewAsUser = () => {
+    // TODO: Implementar rota para visualizar como usuário
+    // Por enquanto, vamos para a home (onde o usuário veria seu book)
+    router.push('/');
+    onClose();
+  };
 
   const performanceConfig = bookData.performance_level 
     ? performanceLevelConfig[bookData.performance_level]
@@ -117,6 +126,14 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
             <div className="flex items-center gap-2">
               {!isEditing && (
                 <>
+                  <button
+                    onClick={handleViewAsUser}
+                    className="flex items-center gap-2 px-3 py-2 bg-neutral-1 hover:bg-neutral-2 text-neutral-10 font-medium text-sm rounded-lg transition-colors"
+                    title="Ver como o usuário vê"
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span className="hidden sm:inline">Ver como Usuário</span>
+                  </button>
                   <button
                     onClick={() => setIsEditing(true)}
                     className="p-2 hover:bg-neutral-1 rounded-lg transition-colors"
@@ -340,46 +357,66 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                     )}
                   </div>
 
-                  {/* Metas Preview */}
-                  {!indicator.has_missing_goals && (
-                    <div className="mt-3 pt-3 border-t border-neutral-2">
-                      <p className="text-xs text-neutral-5 mb-2">Metas 2025:</p>
-                      <div className="grid grid-cols-4 gap-2 text-xs">
-                        <div>
-                          <span className="text-neutral-5">Q1:</span>
-                          <span className="ml-1 font-medium text-neutral-10">
-                            {indicator.goals.jan && indicator.goals.feb && indicator.goals.mar
-                              ? `${indicator.goals.jan}-${indicator.goals.mar}`
-                              : '—'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-neutral-5">Q2:</span>
-                          <span className="ml-1 font-medium text-neutral-10">
-                            {indicator.goals.apr && indicator.goals.may && indicator.goals.jun
-                              ? `${indicator.goals.apr}-${indicator.goals.jun}`
-                              : '—'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-neutral-5">Q3:</span>
-                          <span className="ml-1 font-medium text-neutral-10">
-                            {indicator.goals.jul && indicator.goals.aug && indicator.goals.sep
-                              ? `${indicator.goals.jul}-${indicator.goals.sep}`
-                              : '—'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-neutral-5">Q4:</span>
-                          <span className="ml-1 font-medium text-neutral-10">
-                            {indicator.goals.oct && indicator.goals.nov && indicator.goals.dec
-                              ? `${indicator.goals.oct}-${indicator.goals.dec}`
-                              : '—'}
-                          </span>
-                        </div>
-                      </div>
+                  {/* Metas Mês a Mês */}
+                  <div className="mt-3 pt-3 border-t border-neutral-2">
+                    <p className="text-xs font-medium text-neutral-8 mb-3 uppercase tracking-wide">
+                      Metas {bookData.year}
+                    </p>
+                    
+                    {/* Grid de Meses */}
+                    <div className="grid grid-cols-6 gap-2 mb-3">
+                      {Object.entries(monthLabels).map(([key, label]) => {
+                        const value = indicator.goals[key as keyof MonthlyGoals];
+                        const hasMeta = value !== undefined && value !== null;
+                        return (
+                          <div
+                            key={key}
+                            className={`px-2 py-1.5 rounded text-center transition-colors ${
+                              hasMeta
+                                ? 'bg-neutral-1 hover:bg-neutral-2'
+                                : 'bg-red-50 border border-red-200'
+                            }`}
+                          >
+                            <p className={`text-xs font-medium mb-0.5 ${
+                              hasMeta ? 'text-neutral-5' : 'text-suno-red'
+                            }`}>
+                              {label}
+                            </p>
+                            <p className={`text-sm font-bold ${
+                              hasMeta ? 'text-neutral-10' : 'text-suno-red'
+                            }`}>
+                              {hasMeta ? value : '—'}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
-                  )}
+
+                    {/* Resumo por Quarter (secundário) */}
+                    <div className="flex items-center gap-2 text-xs text-neutral-5">
+                      <span className="font-medium">Por Quarter:</span>
+                      {[
+                        { q: 1, months: ['jan', 'feb', 'mar'] as (keyof MonthlyGoals)[] },
+                        { q: 2, months: ['apr', 'may', 'jun'] as (keyof MonthlyGoals)[] },
+                        { q: 3, months: ['jul', 'aug', 'sep'] as (keyof MonthlyGoals)[] },
+                        { q: 4, months: ['oct', 'nov', 'dec'] as (keyof MonthlyGoals)[] },
+                      ].map(({ q, months }) => {
+                        const allFilled = months.every(m => indicator.goals[m] !== undefined && indicator.goals[m] !== null);
+                        return (
+                          <span
+                            key={q}
+                            className={`px-2 py-0.5 rounded font-medium ${
+                              allFilled
+                                ? 'bg-neutral-1 text-neutral-8'
+                                : 'bg-red-50 text-suno-red'
+                            }`}
+                          >
+                            Q{q} {allFilled ? '✓' : '✗'}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
 
                   {/* Performance */}
                   {indicator.current_performance !== undefined && (
