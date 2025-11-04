@@ -41,7 +41,7 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Criar identities para os usuários
 INSERT INTO auth.identities (
-  id,
+  provider_id,
   user_id,
   identity_data,
   provider,
@@ -49,17 +49,17 @@ INSERT INTO auth.identities (
   created_at,
   updated_at
 ) VALUES
-  ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '{"sub":"11111111-1111-1111-1111-111111111111","email":"admin@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '{"sub":"22222222-2222-2222-2222-222222222222","email":"ana.silva@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', '{"sub":"33333333-3333-3333-3333-333333333333","email":"allan.silva@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', '{"sub":"44444444-4444-4444-4444-444444444444","email":"maria.santos@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('55555555-5555-5555-5555-555555555555', '55555555-5555-5555-5555-555555555555', '{"sub":"55555555-5555-5555-5555-555555555555","email":"pedro.costa@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('66666666-6666-6666-6666-666666666666', '66666666-6666-6666-6666-666666666666', '{"sub":"66666666-6666-6666-6666-666666666666","email":"julia.oliveira@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('77777777-7777-7777-7777-777777777777', '77777777-7777-7777-7777-777777777777', '{"sub":"77777777-7777-7777-7777-777777777777","email":"carlos.mendes@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('88888888-8888-8888-8888-888888888888', '88888888-8888-8888-8888-888888888888', '{"sub":"88888888-8888-8888-8888-888888888888","email":"fernanda.lima@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('99999999-9999-9999-9999-999999999999', '99999999-9999-9999-9999-999999999999', '{"sub":"99999999-9999-9999-9999-999999999999","email":"roberto.alves@suno.com.br"}', 'email', NOW(), NOW(), NOW()),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","email":"patricia.rocha@suno.com.br"}', 'email', NOW(), NOW(), NOW())
-ON CONFLICT (id) DO NOTHING;
+  ('11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '{"sub":"11111111-1111-1111-1111-111111111111","email":"admin@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '{"sub":"22222222-2222-2222-2222-222222222222","email":"ana.silva@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', '{"sub":"33333333-3333-3333-3333-333333333333","email":"allan.silva@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', '{"sub":"44444444-4444-4444-4444-444444444444","email":"maria.santos@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('55555555-5555-5555-5555-555555555555', '55555555-5555-5555-5555-555555555555', '{"sub":"55555555-5555-5555-5555-555555555555","email":"pedro.costa@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('66666666-6666-6666-6666-666666666666', '66666666-6666-6666-6666-666666666666', '{"sub":"66666666-6666-6666-6666-666666666666","email":"julia.oliveira@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('77777777-7777-7777-7777-777777777777', '77777777-7777-7777-7777-777777777777', '{"sub":"77777777-7777-7777-7777-777777777777","email":"carlos.mendes@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('88888888-8888-8888-8888-888888888888', '88888888-8888-8888-8888-888888888888', '{"sub":"88888888-8888-8888-8888-888888888888","email":"fernanda.lima@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('99999999-9999-9999-9999-999999999999', '99999999-9999-9999-9999-999999999999', '{"sub":"99999999-9999-9999-9999-999999999999","email":"roberto.alves@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW()),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","email":"patricia.rocha@suno.com.br","email_verified":true,"phone_verified":false}', 'email', NOW(), NOW(), NOW())
+ON CONFLICT (provider_id, provider) DO NOTHING;
 
 -- =====================================================================================================================
 -- 1. USUÁRIOS NA TABELA PUBLIC.USERS
