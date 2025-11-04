@@ -6,8 +6,8 @@ import { mockTeamBooks } from '@/lib/mockTeamBooks';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white p-4 md:p-6 lg:p-8">
-      <div className="w-[90%] mx-auto">
+    <main className="min-h-screen bg-white p-2 sm:p-4 md:p-6 lg:p-8">
+      <div className="w-full max-w-[1800px] mx-auto px-2 sm:px-4">
         {/* Header */}
         <Header 
           currentYear={2025}

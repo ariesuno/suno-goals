@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { TeamBook } from '@/types/indicator';
 import BookHeader from './BookHeader';
 import BookNavigation from './BookNavigation';
+import BookSearchAndSelect from './BookSearchAndSelect';
 import IndicatorTable from './IndicatorTable';
 import ScreenshotButton from './ScreenshotButton';
 
@@ -31,6 +32,13 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
   const handleNext = () => {
     if (currentBookIndex < books.length - 1) {
       setCurrentBookIndex(currentBookIndex + 1);
+    }
+  };
+
+  const handleBookSelect = (bookId: string) => {
+    const index = books.findIndex(book => book.id === bookId);
+    if (index !== -1) {
+      setCurrentBookIndex(index);
     }
   };
 
@@ -61,9 +69,16 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
 
       {/* Conteúdo expansível */}
       {isExpanded && (
-        <div className="mt-6 md:mt-7 lg:mt-8 space-y-6 md:space-y-7 lg:space-y-8">
+        <div className="mt-4 sm:mt-5 md:mt-6 lg:mt-7 space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7">
+          {/* Busca e Seleção */}
+          <BookSearchAndSelect
+            books={books}
+            currentBookId={currentBook.id}
+            onBookSelect={handleBookSelect}
+          />
+
           {/* Navegação e Screenshot */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <BookNavigation
               currentIndex={currentBookIndex}
               totalBooks={books.length}
@@ -80,7 +95,7 @@ export default function TeamBooksSection({ books }: TeamBooksSectionProps) {
 
           {/* Book atual */}
           <div 
-            className="bg-white border border-neutral-2 rounded-lg p-4 md:p-5 lg:p-6 shadow-sm"
+            className="bg-white border border-neutral-2 rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 shadow-sm"
             data-team-book={currentBook.id}
           >
             {/* Header do book */}
