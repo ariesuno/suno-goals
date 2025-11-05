@@ -1,7 +1,8 @@
 import { BackofficeBook, BookOwnerType, MonthlyGoals } from '@/types/backoffice';
-import { X, ChevronLeft, ChevronRight, User, Users, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { X, ChevronLeft, ChevronRight, User, Users, AlertCircle, Search } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { mockIndicators } from '@/lib/mockIndicators';
+import { mockUsers, mockTeams } from '@/lib/mockUsers';
 import BookGoalsEditor from './BookGoalsEditor';
 
 type BookFormModalProps = {
@@ -43,6 +44,59 @@ export default function BookFormModal({ book, onSave, onClose }: BookFormModalPr
   });
 
   const [currentGoalIndex, setCurrentGoalIndex] = useState(0);
+  const [ownerSearchTerm, setOwnerSearchTerm] = useState('');
+  const [showOwnerDropdown, setShowOwnerDropdown] = useState(false);
+
+  // Filtrar pessoas ou times baseado no tipo selecionado e busca
+  const filteredOwners = useMemo(() => {
+    if (formData.owner_type === 'person') {
+      return mockUsers
+        .filter(u => u.role !== 'admin') // Admins não recebem books
+        .filter(u => !u.team_id) // Pessoas em times não podem ter book individual
+        .filter(u => {
+          if (!ownerSearchTerm) return true;
+          const search = ownerSearchTerm.toLowerCase();
+          return (
+            u.full_name.toLowerCase().includes(search) ||
+            u.email_prefix.toLowerCase().includes(search) ||
+            (u.department && u.department.toLowerCase().includes(search))
+          );
+        });
+    } else {
+      return mockTeams
+        .filter(t => t.is_active)
+        .filter(t => {
+          if (!ownerSearchTerm) return true;
+          const search = ownerSearchTerm.toLowerCase();
+          return (
+            t.name.toLowerCase().includes(search) ||
+            t.manager_name.toLowerCase().includes(search) ||
+            (t.department && t.department.toLowerCase().includes(search))
+          );
+        });
+    }
+  }, [formData.owner_type, ownerSearchTerm]);
+
+  const handleSelectOwner = (owner: any) => {
+    if (formData.owner_type === 'person') {
+      setFormData({
+        ...formData,
+        owner_id: owner.id,
+        owner_name: owner.full_name,
+        owner_email: owner.email_prefix + '@suno.com.br',
+        owner_role: owner.department,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        owner_id: owner.id,
+        owner_name: owner.name,
+        owner_role: owner.department,
+      });
+    }
+    setShowOwnerDropdown(false);
+    setOwnerSearchTerm('');
+  };
 
   const canProceed = () => {
     if (step === 1) {
@@ -201,7 +255,18 @@ export default function BookFormModal({ book, onSave, onClose }: BookFormModalPr
                   <div className="flex gap-3">
                     <button
                       type="button"
-                      onClick={() => setFormData({ ...formData, owner_type: 'person' })}
+                      onClick={() => {
+                        setFormData({ 
+                          ...formData, 
+                          owner_type: 'person',
+                          owner_id: '',
+                          owner_name: '',
+                          owner_email: undefined,
+                          owner_role: undefined,
+                        });
+                        setOwnerSearchTerm('');
+                        setShowOwnerDropdown(false);
+                      }}
                       className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 rounded-lg font-medium transition-colors ${
                         formData.owner_type === 'person'
                           ? 'border-suno-red bg-red-50 text-suno-red'
@@ -213,7 +278,18 @@ export default function BookFormModal({ book, onSave, onClose }: BookFormModalPr
                     </button>
                     <button
                       type="button"
-                      onClick={() => setFormData({ ...formData, owner_type: 'team' })}
+                      onClick={() => {
+                        setFormData({ 
+                          ...formData, 
+                          owner_type: 'team',
+                          owner_id: '',
+                          owner_name: '',
+                          owner_email: undefined,
+                          owner_role: undefined,
+                        });
+                        setOwnerSearchTerm('');
+                        setShowOwnerDropdown(false);
+                      }}
                       className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 rounded-lg font-medium transition-colors ${
                         formData.owner_type === 'team'
                           ? 'border-suno-red bg-red-50 text-suno-red'
@@ -226,49 +302,155 @@ export default function BookFormModal({ book, onSave, onClose }: BookFormModalPr
                   </div>
                 </div>
 
-                {formData.owner_type === 'person' && (
-                  <>
-                    <div>
-                      <label className="block text-sm font-medium text-neutral-10 mb-2">
-                        Nome da Pessoa *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.owner_name}
-                        onChange={(e) => setFormData({ ...formData, owner_name: e.target.value, owner_id: e.target.value.toLowerCase().replace(/\s/g, '-') })}
-                        placeholder="Ex: Allan Silva"
-                        className="w-full px-3 py-2 border border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red"
-                      />
+                {/* Seletor de Owner (Pessoa ou Time) */}
+                <div className="relative">
+                  <label className="block text-sm font-medium text-neutral-10 mb-2">
+                    {formData.owner_type === 'person' ? 'Selecionar Pessoa *' : 'Selecionar Time *'}
+                  </label>
+                  
+                  {/* Owner Selecionado (Preview) */}
+                  {formData.owner_id && formData.owner_name ? (
+                    <div className="mb-3 p-4 bg-neutral-1 border border-neutral-2 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-neutral-2 rounded-full flex items-center justify-center">
+                            {formData.owner_type === 'person' ? (
+                              <User className="w-5 h-5 text-neutral-8" />
+                            ) : (
+                              <Users className="w-5 h-5 text-neutral-8" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium text-neutral-10">{formData.owner_name}</p>
+                            {formData.owner_role && (
+                              <p className="text-sm text-neutral-8">{formData.owner_role}</p>
+                            )}
+                            {formData.owner_email && (
+                              <p className="text-xs text-neutral-5 font-mono">{formData.owner_email}</p>
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              owner_id: '',
+                              owner_name: '',
+                              owner_email: undefined,
+                              owner_role: undefined,
+                            });
+                            setShowOwnerDropdown(true);
+                          }}
+                          className="text-sm text-suno-red hover:underline"
+                        >
+                          Alterar
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-neutral-10 mb-2">
-                        Cargo (opcional)
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.owner_role || ''}
-                        onChange={(e) => setFormData({ ...formData, owner_role: e.target.value })}
-                        placeholder="Ex: Head de Dados e CRM"
-                        className="w-full px-3 py-2 border border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red"
-                      />
-                    </div>
-                  </>
-                )}
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowOwnerDropdown(!showOwnerDropdown)}
+                      className="w-full px-3 py-2 border border-neutral-3 rounded-lg text-left text-neutral-5 hover:border-neutral-5 transition-colors flex items-center justify-between"
+                    >
+                      <span>
+                        {formData.owner_type === 'person' 
+                          ? 'Clique para selecionar uma pessoa...' 
+                          : 'Clique para selecionar um time...'}
+                      </span>
+                      <Search className="w-4 h-4" />
+                    </button>
+                  )}
 
-                {formData.owner_type === 'team' && (
-                  <div>
-                    <label className="block text-sm font-medium text-neutral-10 mb-2">
-                      Nome do Time *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.owner_name}
-                      onChange={(e) => setFormData({ ...formData, owner_name: e.target.value, owner_id: e.target.value.toLowerCase().replace(/\s/g, '-') })}
-                      placeholder="Ex: Time de Dados"
-                      className="w-full px-3 py-2 border border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red"
-                    />
-                  </div>
-                )}
+                  {/* Dropdown com busca */}
+                  {showOwnerDropdown && (
+                    <div className="absolute z-10 w-full mt-2 bg-white border border-neutral-3 rounded-lg shadow-lg max-h-80 overflow-hidden flex flex-col">
+                      {/* Campo de busca */}
+                      <div className="p-3 border-b border-neutral-2">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-5" />
+                          <input
+                            type="text"
+                            value={ownerSearchTerm}
+                            onChange={(e) => setOwnerSearchTerm(e.target.value)}
+                            placeholder={formData.owner_type === 'person' ? 'Buscar pessoa...' : 'Buscar time...'}
+                            className="w-full pl-10 pr-3 py-2 border border-neutral-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-suno-red text-sm"
+                            autoFocus
+                          />
+                        </div>
+                      </div>
+
+                      {/* Lista de opções */}
+                      <div className="overflow-y-auto">
+                        {filteredOwners.length === 0 ? (
+                          <div className="p-4 text-center text-sm text-neutral-5">
+                            {formData.owner_type === 'person' 
+                              ? 'Nenhuma pessoa encontrada' 
+                              : 'Nenhum time encontrado'}
+                          </div>
+                        ) : (
+                          filteredOwners.map((owner: any) => (
+                            <button
+                              key={owner.id}
+                              type="button"
+                              onClick={() => handleSelectOwner(owner)}
+                              className="w-full p-3 hover:bg-neutral-1 transition-colors text-left border-b border-neutral-1 last:border-b-0"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-neutral-2 rounded-full flex items-center justify-center flex-shrink-0">
+                                  {formData.owner_type === 'person' ? (
+                                    <User className="w-5 h-5 text-neutral-8" />
+                                  ) : (
+                                    <Users className="w-5 h-5 text-neutral-8" />
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-medium text-neutral-10 truncate">
+                                    {formData.owner_type === 'person' ? owner.full_name : owner.name}
+                                  </p>
+                                  {formData.owner_type === 'person' ? (
+                                    <>
+                                      {owner.department && (
+                                        <p className="text-sm text-neutral-8 truncate">{owner.department}</p>
+                                      )}
+                                      <p className="text-xs text-neutral-5 font-mono truncate">
+                                        {owner.email_prefix}@suno.com.br
+                                      </p>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <p className="text-sm text-neutral-8 truncate">
+                                        Manager: {owner.manager_name}
+                                      </p>
+                                      <p className="text-xs text-neutral-5">
+                                        {owner.member_count} {owner.member_count === 1 ? 'membro' : 'membros'}
+                                      </p>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </button>
+                          ))
+                        )}
+                      </div>
+
+                      {/* Botão para fechar */}
+                      <div className="p-2 border-t border-neutral-2 bg-neutral-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowOwnerDropdown(false);
+                            setOwnerSearchTerm('');
+                          }}
+                          className="w-full px-3 py-2 text-sm text-neutral-8 hover:bg-neutral-2 rounded-lg transition-colors"
+                        >
+                          Fechar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-neutral-10 mb-2">
