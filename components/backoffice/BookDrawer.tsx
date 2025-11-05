@@ -40,10 +40,10 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
   const [bookData, setBookData] = useState(book);
 
   const handleViewAsUser = () => {
-    // TODO: Implementar rota para visualizar como usuário
-    // Por enquanto, vamos para a home (onde o usuário veria seu book)
-    router.push('/');
-    onClose();
+    // Abre a visualização do usuário em uma nova aba
+    // TODO: Implementar rota específica com ID do book
+    const url = `/?preview=true&bookId=${bookData.id}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const performanceConfig = bookData.performance_level 
