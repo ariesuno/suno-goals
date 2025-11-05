@@ -11,12 +11,14 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  UsersRound
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/backoffice', icon: TrendingUp },
   { name: 'Usuários', href: '/admin/backoffice/users', icon: Users },
+  { name: 'Times', href: '/admin/backoffice/teams', icon: UsersRound },
   { name: 'Indicadores', href: '/admin/backoffice/indicators', icon: TrendingUp },
   { name: 'Books', href: '/admin/backoffice/books', icon: BookOpen },
   { name: 'Configurações', href: '/admin/backoffice/settings', icon: Settings },
