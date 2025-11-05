@@ -3,13 +3,22 @@
 import { useState } from 'react';
 import { Plus, Search, Filter, X, Users as UsersIcon, User as UserIcon } from 'lucide-react';
 import { mockTeams, mockUsers } from '@/lib/mockUsers';
-import { Team, TeamFilters } from '@/types/users';
+import { Team, TeamFilters, TeamFormData } from '@/types/users';
+import TeamFormModal from '@/components/backoffice/TeamFormModal';
 
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>(mockTeams);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<TeamFilters>({});
   const [showFilters, setShowFilters] = useState(false);
+  const [showTeamModal, setShowTeamModal] = useState(false);
+
+  const handleSaveTeam = (teamData: TeamFormData) => {
+    // TODO: Integrar com Supabase
+    console.log('Saving team:', teamData);
+    // Por enquanto, apenas fechar o modal
+    setShowTeamModal(false);
+  };
 
   // Filtrar times
   const filteredTeams = teams.filter(team => {
@@ -66,7 +75,7 @@ export default function TeamsPage() {
           </p>
         </div>
         <button
-          onClick={() => {/* TODO: Abrir modal de novo time */}}
+          onClick={() => setShowTeamModal(true)}
           className="flex items-center gap-2 px-4 py-2.5 bg-suno-red text-white font-semibold text-sm rounded-lg hover:bg-red-700 transition-colors"
         >
           <Plus className="w-4 h-4" />
@@ -251,6 +260,13 @@ export default function TeamsPage() {
           ))}
         </div>
       )}
+
+      {/* Modal de Criar/Editar Time */}
+      <TeamFormModal
+        isOpen={showTeamModal}
+        onClose={() => setShowTeamModal(false)}
+        onSave={handleSaveTeam}
+      />
     </div>
   );
 }
