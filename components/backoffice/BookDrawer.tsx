@@ -2,6 +2,7 @@ import { BackofficeBook, MonthlyGoals } from '@/types/backoffice';
 import { X, Edit2, Trash2, User, Users, Calendar, TrendingUp, AlertCircle, CheckCircle, History, Plus, Eye } from 'lucide-react';
 import { useState } from 'react';
 import EditGoalsModal from './EditGoalsModal';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { useRouter } from 'next/navigation';
 
 type BookDrawerProps = {
@@ -38,12 +39,19 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
   const [isEditing, setIsEditing] = useState(false);
   const [editingGoalsIndex, setEditingGoalsIndex] = useState<number | null>(null);
   const [bookData, setBookData] = useState(book);
+  const [showDeleteBookModal, setShowDeleteBookModal] = useState(false);
+  const [indicatorToDelete, setIndicatorToDelete] = useState<{ id: string; name: string } | null>(null);
 
   const handleViewAsUser = () => {
     // Abre a visualização do usuário em uma nova aba
     // TODO: Implementar rota específica com ID do book
     const url = `/?preview=true&bookId=${bookData.id}`;
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleConfirmDeleteBook = () => {
+    onDelete(book.id);
+    onClose();
   };
 
   const performanceConfig = bookData.performance_level 
@@ -70,23 +78,28 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
     onEdit(newBookData);
   };
 
-  const handleRemoveIndicator = (indicatorId: string) => {
+  const handleRemoveIndicator = (indicatorId: string, indicatorName: string) => {
     if (bookData.total_indicators <= 1) {
       alert('O book precisa ter pelo menos 1 indicador');
       return;
     }
 
-    if (confirm('Tem certeza que deseja remover este indicador do book?')) {
-      const updatedIndicators = bookData.indicators.filter(i => i.indicator_id !== indicatorId);
-      const newBookData = {
-        ...bookData,
-        indicators: updatedIndicators,
-        total_indicators: updatedIndicators.length,
-        indicators_with_missing_goals: updatedIndicators.filter(i => i.has_missing_goals).length,
-      };
-      setBookData(newBookData);
-      onEdit(newBookData);
-    }
+    setIndicatorToDelete({ id: indicatorId, name: indicatorName });
+  };
+
+  const handleConfirmDeleteIndicator = () => {
+    if (!indicatorToDelete) return;
+
+    const updatedIndicators = bookData.indicators.filter(i => i.indicator_id !== indicatorToDelete.id);
+    const newBookData = {
+      ...bookData,
+      indicators: updatedIndicators,
+      total_indicators: updatedIndicators.length,
+      indicators_with_missing_goals: updatedIndicators.filter(i => i.has_missing_goals).length,
+    };
+    setBookData(newBookData);
+    onEdit(newBookData);
+    setIndicatorToDelete(null);
   };
 
   return (
@@ -142,11 +155,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                     <Edit2 className="w-5 h-5 text-neutral-8" />
                   </button>
                   <button
-                    onClick={() => {
-                      if (confirm('Tem certeza que deseja excluir este book?')) {
-                        onDelete(book.id);
-                      }
-                    }}
+                    onClick={() => setShowDeleteBookModal(true)}
                     className="p-2 hover:bg-red-50 rounded-lg transition-colors"
                     title="Excluir"
                   >
@@ -442,7 +451,7 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
                       Editar Metas
                     </button>
                     <button 
-                      onClick={() => handleRemoveIndicator(indicator.indicator_id)}
+                      onClick={() => handleRemoveIndicator(indicator.indicator_id, indicator.indicator_name)}
                       className="px-3 py-1.5 text-xs font-medium text-suno-red hover:bg-red-50 rounded transition-colors"
                     >
                       Remover
@@ -581,6 +590,30 @@ export default function BookDrawer({ book, onClose, onEdit, onDelete }: BookDraw
           onClose={() => setEditingGoalsIndex(null)}
         />
       )}
+
+      {/* Modal de Confirmação - Excluir Book */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteBookModal}
+        onClose={() => setShowDeleteBookModal(false)}
+        onConfirm={handleConfirmDeleteBook}
+        title="Excluir Book"
+        description="Esta ação é irreversível e todos os dados do book serão perdidos permanentemente."
+        confirmText="EXCLUIR O BOOK"
+        itemName={bookData.name}
+        warningMessage="Todos os indicadores e metas deste book serão removidos"
+      />
+
+      {/* Modal de Confirmação - Remover Indicador */}
+      <DeleteConfirmationModal
+        isOpen={indicatorToDelete !== null}
+        onClose={() => setIndicatorToDelete(null)}
+        onConfirm={handleConfirmDeleteIndicator}
+        title="Remover Indicador"
+        description="O indicador será removido deste book. As metas definidas serão perdidas."
+        confirmText="EXCLUIR O INDICADOR"
+        itemName={indicatorToDelete?.name}
+        warningMessage="Esta ação não pode ser desfeita"
+      />
     </>
   );
 }

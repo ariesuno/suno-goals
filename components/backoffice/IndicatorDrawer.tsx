@@ -6,7 +6,7 @@ type IndicatorDrawerProps = {
   indicator: BackofficeIndicator;
   onClose: () => void;
   onEdit: (indicator: BackofficeIndicator) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, name: string) => void;
 };
 
 const availableTags = [
@@ -189,7 +189,7 @@ export default function IndicatorDrawer({ indicator, onClose, onEdit, onDelete }
                     <Edit2 className="w-5 h-5 text-neutral-8" />
                   </button>
                   <button
-                    onClick={() => onDelete(indicator.id)}
+                    onClick={() => onDelete(indicator.id, indicator.name)}
                     className="p-2 hover:bg-red-50 rounded-lg transition-colors"
                     title="Excluir"
                   >

@@ -8,6 +8,7 @@ import IndicatorCard from '@/components/backoffice/IndicatorCard';
 import IndicatorDrawer from '@/components/backoffice/IndicatorDrawer';
 import IndicatorFormModal from '@/components/backoffice/IndicatorFormModal';
 import IndicatorFiltersPanel from '@/components/backoffice/IndicatorFiltersPanel';
+import DeleteConfirmationModal from '@/components/backoffice/DeleteConfirmationModal';
 
 export default function IndicatorsPage() {
   const [indicators, setIndicators] = useState<BackofficeIndicator[]>(mockIndicators);
@@ -17,6 +18,7 @@ export default function IndicatorsPage() {
   const [selectedIndicator, setSelectedIndicator] = useState<BackofficeIndicator | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingIndicator, setEditingIndicator] = useState<BackofficeIndicator | null>(null);
+  const [indicatorToDelete, setIndicatorToDelete] = useState<{ id: string; name: string } | null>(null);
 
   // Filtrar indicadores
   const filteredIndicators = indicators.filter(indicator => {
@@ -71,11 +73,16 @@ export default function IndicatorsPage() {
     setEditingIndicator(null);
   };
 
-  const handleDeleteIndicator = (id: string) => {
-    if (confirm('Tem certeza que deseja excluir este indicador?')) {
-      setIndicators(prev => prev.filter(i => i.id !== id));
-      setSelectedIndicator(null);
-    }
+  const handleDeleteIndicator = (id: string, name: string) => {
+    setIndicatorToDelete({ id, name });
+  };
+
+  const handleConfirmDeleteIndicator = () => {
+    if (!indicatorToDelete) return;
+    
+    setIndicators(prev => prev.filter(i => i.id !== indicatorToDelete.id));
+    setSelectedIndicator(null);
+    setIndicatorToDelete(null);
   };
 
   const activeFiltersCount = 
@@ -198,6 +205,22 @@ export default function IndicatorsPage() {
           }}
         />
       )}
+
+      {/* Modal de Confirmação - Excluir Indicador */}
+      <DeleteConfirmationModal
+        isOpen={indicatorToDelete !== null}
+        onClose={() => setIndicatorToDelete(null)}
+        onConfirm={handleConfirmDeleteIndicator}
+        title="Excluir Indicador"
+        description="Esta ação é irreversível. O indicador será removido permanentemente do sistema."
+        confirmText="EXCLUIR O INDICADOR"
+        itemName={indicatorToDelete?.name}
+        warningMessage={
+          indicators.find(i => i.id === indicatorToDelete?.id)?.total_books 
+            ? `Este indicador está em ${indicators.find(i => i.id === indicatorToDelete?.id)?.total_books} book(s). Todos serão afetados.`
+            : undefined
+        }
+      />
     </div>
   );
 }
