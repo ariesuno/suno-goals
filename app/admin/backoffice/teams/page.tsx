@@ -5,6 +5,7 @@ import { Plus, Search, Filter, X, Users as UsersIcon, User as UserIcon } from 'l
 import { mockTeams, mockUsers } from '@/lib/mockUsers';
 import { Team, TeamFilters, TeamFormData } from '@/types/users';
 import TeamFormModal from '@/components/backoffice/TeamFormModal';
+import TeamDrawer from '@/components/backoffice/TeamDrawer';
 
 export default function TeamsPage() {
   const [teams, setTeams] = useState<Team[]>(mockTeams);
@@ -12,12 +13,27 @@ export default function TeamsPage() {
   const [filters, setFilters] = useState<TeamFilters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [editingTeam, setEditingTeam] = useState<Team | null>(null);
 
   const handleSaveTeam = (teamData: TeamFormData) => {
     // TODO: Integrar com Supabase
     console.log('Saving team:', teamData);
     // Por enquanto, apenas fechar o modal
     setShowTeamModal(false);
+    setEditingTeam(null);
+  };
+
+  const handleEditTeam = (team: Team) => {
+    setEditingTeam(team);
+    setSelectedTeam(null);
+    setShowTeamModal(true);
+  };
+
+  const handleDeleteTeam = (teamId: string) => {
+    // TODO: Integrar com Supabase
+    console.log('Deleting team:', teamId);
+    setTeams(teams.filter(t => t.id !== teamId));
   };
 
   // Filtrar times
@@ -168,7 +184,7 @@ export default function TeamsPage() {
           {filteredTeams.map((team) => (
             <button
               key={team.id}
-              onClick={() => {/* TODO: Abrir drawer de detalhes */}}
+              onClick={() => setSelectedTeam(team)}
               className="bg-white border border-neutral-2 rounded-xl p-5 text-left hover:border-neutral-5 hover:shadow-md transition-all"
             >
               {/* Header */}
@@ -264,8 +280,20 @@ export default function TeamsPage() {
       {/* Modal de Criar/Editar Time */}
       <TeamFormModal
         isOpen={showTeamModal}
-        onClose={() => setShowTeamModal(false)}
+        onClose={() => {
+          setShowTeamModal(false);
+          setEditingTeam(null);
+        }}
         onSave={handleSaveTeam}
+        team={editingTeam || undefined}
+      />
+
+      {/* Drawer de Detalhes do Time */}
+      <TeamDrawer
+        team={selectedTeam}
+        onClose={() => setSelectedTeam(null)}
+        onEdit={handleEditTeam}
+        onDelete={handleDeleteTeam}
       />
     </div>
   );
