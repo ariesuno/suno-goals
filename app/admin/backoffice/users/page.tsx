@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Plus, Search, Filter, X, Users as UsersIcon, User as UserIcon } from 'lucide-react';
 import { mockUsers } from '@/lib/mockUsers';
-import { User, UserFilters } from '@/types/users';
+import { User, UserFilters, UserFormData } from '@/types/users';
+import UserFormModal from '@/components/backoffice/UserFormModal';
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>(mockUsers);
@@ -11,6 +12,14 @@ export default function UsersPage() {
   const [filters, setFilters] = useState<UserFilters>({});
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'all' | 'with_team' | 'without_team' | 'pending'>('all');
+  const [showUserModal, setShowUserModal] = useState(false);
+
+  const handleSaveUser = (userData: UserFormData) => {
+    // TODO: Integrar com Supabase
+    console.log('Saving user:', userData);
+    // Por enquanto, apenas fechar o modal
+    setShowUserModal(false);
+  };
 
   // Filtrar usuários
   const filteredUsers = users.filter(user => {
@@ -74,7 +83,7 @@ export default function UsersPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => {/* TODO: Abrir modal de novo usuário */}}
+            onClick={() => setShowUserModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-suno-red text-white font-semibold text-sm rounded-lg hover:bg-red-700 transition-colors"
           >
             <Plus className="w-4 h-4" />
@@ -292,6 +301,13 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+
+      {/* Modal de Criar/Editar Usuário */}
+      <UserFormModal
+        isOpen={showUserModal}
+        onClose={() => setShowUserModal(false)}
+        onSave={handleSaveUser}
+      />
     </div>
   );
 }
