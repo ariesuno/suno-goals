@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, ArrowLeft, ArrowRight, Save } from 'lucide-react';
-import BookStep1Info from '@/components/backoffice/book-wizard/BookStep1Info';
-import BookStep2Indicators from '@/components/backoffice/book-wizard/BookStep2Indicators';
-import BookStep3Goals from '@/components/backoffice/book-wizard/BookStep3Goals';
-import BookStep4Review from '@/components/backoffice/book-wizard/BookStep4Review';
+import { X, Check } from 'lucide-react';
+import BookWizardStep1 from '@/components/backoffice/book-wizard-v2/BookWizardStep1';
+import BookWizardStep2 from '@/components/backoffice/book-wizard-v2/BookWizardStep2';
+import BookWizardStep3 from '@/components/backoffice/book-wizard-v2/BookWizardStep3';
 import { BookOwnerType, MonthlyGoals } from '@/types/backoffice';
 
 type BookFormData = {
@@ -43,21 +42,18 @@ export default function NewBookPage() {
   });
 
   const steps = [
-    { number: 1, title: 'Informações', component: BookStep1Info },
-    { number: 2, title: 'Indicadores', component: BookStep2Indicators },
-    { number: 3, title: 'Metas', component: BookStep3Goals },
-    { number: 4, title: 'Revisão', component: BookStep4Review },
+    { number: 1, title: 'Responsável', subtitle: 'Quem será o dono deste book?' },
+    { number: 2, title: 'Indicadores', subtitle: 'Escolha de 1 a 6 indicadores' },
+    { number: 3, title: 'Finalizar', subtitle: 'Revise e confirme' },
   ];
 
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return formData.name && formData.owner_id && formData.owner_name;
+        return formData.owner_id && formData.owner_name && formData.name;
       case 2:
         return formData.selected_indicators.length >= 1 && formData.selected_indicators.length <= 6;
       case 3:
-        return true; // Metas são opcionais
-      case 4:
         return true;
       default:
         return false;
@@ -65,23 +61,15 @@ export default function NewBookPage() {
   };
 
   const handleNext = () => {
-    if (currentStep < 4 && canProceed()) {
+    if (currentStep < 3 && canProceed()) {
       setCurrentStep(currentStep + 1);
-      window.scrollTo(0, 0);
     }
   };
 
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
-      window.scrollTo(0, 0);
     }
-  };
-
-  const handleSaveDraft = () => {
-    // TODO: Salvar rascunho no localStorage ou backend
-    console.log('Salvando rascunho...', formData);
-    alert('Rascunho salvo com sucesso!');
   };
 
   const handleCancel = () => {
@@ -97,53 +85,48 @@ export default function NewBookPage() {
     router.push('/admin/backoffice/books');
   };
 
-  const CurrentStepComponent = steps[currentStep - 1].component;
-
   return (
-    <div className="min-h-screen bg-neutral-1">
-      {/* Header */}
-      <div className="bg-white border-b border-neutral-2 sticky top-0 z-20">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="font-display font-bold text-2xl text-neutral-10">
-              Criar Novo Book
-            </h1>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleSaveDraft}
-                className="flex items-center gap-2 px-4 py-2 text-neutral-10 hover:bg-neutral-1 rounded-lg transition-colors"
-              >
-                <Save className="w-4 h-4" />
-                <span className="hidden sm:inline">Salvar Rascunho</span>
-              </button>
-              <button
-                onClick={handleCancel}
-                className="p-2 text-neutral-8 hover:bg-neutral-1 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-end">
+      {/* Sidebar Wizard */}
+      <div className="w-full max-w-2xl h-full bg-white flex flex-col shadow-2xl">
+        {/* Header */}
+        <div className="flex-shrink-0 px-8 py-6 border-b border-neutral-2">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h1 className="font-display font-bold text-2xl text-neutral-10 mb-1">
+                Criar Novo Book
+              </h1>
+              <p className="text-sm text-neutral-8">
+                {steps[currentStep - 1].subtitle}
+              </p>
             </div>
+            <button
+              onClick={handleCancel}
+              className="p-2 text-neutral-8 hover:bg-neutral-1 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Progress Steps */}
-          <div className="flex items-center justify-between">
+          {/* Progress Steps - Horizontal */}
+          <div className="flex items-center gap-2">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center flex-1">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-1">
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
                       currentStep === step.number
-                        ? 'bg-suno-red text-white'
+                        ? 'bg-suno-red text-white scale-110'
                         : currentStep > step.number
                         ? 'bg-green-600 text-white'
                         : 'bg-neutral-2 text-neutral-5'
                     }`}
                   >
-                    {currentStep > step.number ? '✓' : step.number}
+                    {currentStep > step.number ? <Check className="w-5 h-5" /> : step.number}
                   </div>
-                  <div className="hidden md:block">
+                  <div className="hidden md:block flex-1">
                     <p
-                      className={`text-sm font-medium ${
+                      className={`text-xs font-semibold ${
                         currentStep === step.number ? 'text-neutral-10' : 'text-neutral-5'
                       }`}
                     >
@@ -153,7 +136,7 @@ export default function NewBookPage() {
                 </div>
                 {index < steps.length - 1 && (
                   <div
-                    className={`flex-1 h-1 mx-4 rounded transition-colors ${
+                    className={`h-0.5 w-full mx-2 transition-colors ${
                       currentStep > step.number ? 'bg-green-600' : 'bg-neutral-2'
                     }`}
                   />
@@ -162,45 +145,44 @@ export default function NewBookPage() {
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <CurrentStepComponent formData={formData} setFormData={setFormData} />
-      </div>
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto px-8 py-6">
+          {currentStep === 1 && <BookWizardStep1 formData={formData} setFormData={setFormData} />}
+          {currentStep === 2 && <BookWizardStep2 formData={formData} setFormData={setFormData} />}
+          {currentStep === 3 && <BookWizardStep3 formData={formData} />}
+        </div>
 
-      {/* Footer Navigation */}
-      <div className="bg-white border-t border-neutral-2 sticky bottom-0 z-20">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        {/* Footer - Fixed */}
+        <div className="flex-shrink-0 px-8 py-4 border-t border-neutral-2 bg-neutral-1">
           <div className="flex items-center justify-between">
             <button
               onClick={handleBack}
               disabled={currentStep === 1}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+              className={`px-5 py-2.5 rounded-lg font-medium transition-colors ${
                 currentStep === 1
-                  ? 'text-neutral-5 cursor-not-allowed'
-                  : 'text-neutral-10 hover:bg-neutral-1'
+                  ? 'text-neutral-4 cursor-not-allowed'
+                  : 'text-neutral-10 hover:bg-neutral-2'
               }`}
             >
-              <ArrowLeft className="w-4 h-4" />
               Voltar
             </button>
 
             <div className="flex items-center gap-3">
               <button
                 onClick={handleCancel}
-                className="px-4 py-2 text-neutral-10 hover:bg-neutral-1 rounded-lg transition-colors"
+                className="px-5 py-2.5 text-neutral-8 hover:bg-neutral-2 rounded-lg transition-colors font-medium"
               >
                 Cancelar
               </button>
 
-              {currentStep === 4 ? (
+              {currentStep === 3 ? (
                 <button
                   onClick={handleSubmit}
                   disabled={!canProceed()}
-                  className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
+                  className={`px-8 py-2.5 rounded-lg font-semibold transition-all ${
                     canProceed()
-                      ? 'bg-suno-red text-white hover:bg-red-700'
+                      ? 'bg-suno-red text-white hover:bg-red-700 shadow-sm'
                       : 'bg-neutral-3 text-neutral-5 cursor-not-allowed'
                   }`}
                 >
@@ -210,14 +192,13 @@ export default function NewBookPage() {
                 <button
                   onClick={handleNext}
                   disabled={!canProceed()}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-lg font-semibold transition-colors ${
+                  className={`px-8 py-2.5 rounded-lg font-semibold transition-all ${
                     canProceed()
-                      ? 'bg-suno-red text-white hover:bg-red-700'
+                      ? 'bg-suno-red text-white hover:bg-red-700 shadow-sm'
                       : 'bg-neutral-3 text-neutral-5 cursor-not-allowed'
                   }`}
                 >
-                  Próximo
-                  <ArrowRight className="w-4 h-4" />
+                  Continuar
                 </button>
               )}
             </div>
@@ -227,4 +208,3 @@ export default function NewBookPage() {
     </div>
   );
 }
-
