@@ -5,6 +5,7 @@ import { Plus, Search, Filter, X, Users as UsersIcon, User as UserIcon } from 'l
 import { mockUsers } from '@/lib/mockUsers';
 import { User, UserFilters, UserFormData } from '@/types/users';
 import UserFormModal from '@/components/backoffice/UserFormModal';
+import UserDrawer from '@/components/backoffice/UserDrawer';
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>(mockUsers);
@@ -13,12 +14,27 @@ export default function UsersPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'all' | 'with_team' | 'without_team' | 'pending'>('all');
   const [showUserModal, setShowUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const handleSaveUser = (userData: UserFormData) => {
     // TODO: Integrar com Supabase
     console.log('Saving user:', userData);
     // Por enquanto, apenas fechar o modal
     setShowUserModal(false);
+    setEditingUser(null);
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setSelectedUser(null);
+    setShowUserModal(true);
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    // TODO: Integrar com Supabase
+    console.log('Deleting user:', userId);
+    setUsers(users.filter(u => u.id !== userId));
   };
 
   // Filtrar usuários
@@ -221,7 +237,7 @@ export default function UsersPage() {
                   <tr
                     key={user.id}
                     className="hover:bg-neutral-1 cursor-pointer transition-colors"
-                    onClick={() => {/* TODO: Abrir drawer de detalhes */}}
+                    onClick={() => setSelectedUser(user)}
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -305,8 +321,20 @@ export default function UsersPage() {
       {/* Modal de Criar/Editar Usuário */}
       <UserFormModal
         isOpen={showUserModal}
-        onClose={() => setShowUserModal(false)}
+        onClose={() => {
+          setShowUserModal(false);
+          setEditingUser(null);
+        }}
         onSave={handleSaveUser}
+        user={editingUser || undefined}
+      />
+
+      {/* Drawer de Detalhes do Usuário */}
+      <UserDrawer
+        user={selectedUser}
+        onClose={() => setSelectedUser(null)}
+        onEdit={handleEditUser}
+        onDelete={handleDeleteUser}
       />
     </div>
   );
